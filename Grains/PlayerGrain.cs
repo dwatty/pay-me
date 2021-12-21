@@ -5,14 +5,14 @@ namespace PayMe.Grains
 {
     public class PlayerGrain : Grain, IPlayerGrain
     {
-        private List<Guid> _activeGames;
-        private List<Guid> _pastGames;
+        private List<Guid> _activeGames = new List<Guid>();
+        private List<Guid> _pastGames = new List<Guid>();
 
         private int _wins;
         private int _loses;
         private int _gamesStarted;
 
-        private string username;
+        private string username = "";
 
         public override Task OnActivateAsync()
         {

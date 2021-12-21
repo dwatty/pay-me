@@ -13,10 +13,12 @@ namespace PayMe.Controllers
     [ApiController]
     [Route("[controller]")]
     public class GameController : ControllerBase
-        {
+    {
         private readonly ISender _mediator;
         private readonly IGrainFactory _grainFactory;
 
+        //
+        // Ctor
         public GameController(IGrainFactory grainFactory, ISender mediator)
         {            
              _grainFactory = grainFactory;
@@ -70,6 +72,8 @@ namespace PayMe.Controllers
             return await _mediator.Send(cmd);
         }
 
+        //
+        // Test connectivity to clients
         [HttpPost("alertclients")]
         public async Task AlertClients()
         {
@@ -77,7 +81,8 @@ namespace PayMe.Controllers
             await _mediator.Send(cmd);
         }
 
-
+        //
+        // Get the summary of the game for initializing client state
         [HttpGet("summary/{id}")]
         public async Task<GameSummary> GetGameSummary(Guid id)
         {
@@ -90,6 +95,8 @@ namespace PayMe.Controllers
             return await _mediator.Send(cmd);
         }
 
+        //
+        // Draw the next card as part of a player's turn
         [HttpPost("drawcard/{id}")]
         public async Task<Card> DrawCard(Guid id)
         {
@@ -100,6 +107,51 @@ namespace PayMe.Controllers
             };
 
             return await _mediator.Send(cmd);
+        }
+
+        //
+        // Take the current discard as part of a player's turn
+        [HttpPost("drawdiscard/{id}")]
+        public async Task<object> DrawDiscard(Guid id)
+        {
+            var cmd = new PickDiscardCommand()
+            {
+                PlayerId = this.GetGuid(),
+                GameId = id
+            };
+
+            return await _mediator.Send(cmd);
+        }
+
+        //
+        // Take the current discard as part of a player's turn
+        [HttpPut("discard/{id}")]
+        public async Task Discard(Guid id, DiscardRequest request)
+        {
+            var cmd = new DiscardCardCommand()
+            {
+                PlayerId = this.GetGuid(),
+                GameId = id,
+                Suite = request.Suite,
+                Value = request.Value
+            };
+
+            await _mediator.Send(cmd);
+        }
+
+
+       //
+        // End the player's turn
+        [HttpPut("endturn/{id}")]
+        public async Task EndTurn(Guid id)
+        {
+            var cmd = new EndTurnCommand()
+            {
+                PlayerId = this.GetGuid(),
+                GameId = id
+            };
+
+            await _mediator.Send(cmd);
         }
 
 

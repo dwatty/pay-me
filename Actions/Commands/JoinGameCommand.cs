@@ -5,11 +5,7 @@ using PayMe.Grains;
 
 namespace PayMe.Commands
 {
-    public class JoinGameCommand : IRequest<GameState>
-    {
-        public Guid PlayerId { get; set; }
-        public Guid GameId { get; set; }
-    }
+    public class JoinGameCommand : CommandQueryBase, IRequest<GameState> { }
 
     public class JoinGameCommandHandler : IRequestHandler<JoinGameCommand, GameState>
     {

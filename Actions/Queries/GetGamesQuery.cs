@@ -1,5 +1,6 @@
 using MediatR;
 using Orleans;
+using PayMe.Commands;
 using PayMe.Grains;
 
 namespace PayMe.Queries
@@ -7,14 +8,11 @@ namespace PayMe.Queries
 
     public class CreateGameResponse
     {
-        public List<GameSummary> GameSummaries { get; set; }
-        public PairingSummary[] AvailableGames { get; set; }
+        public List<GameSummary> GameSummaries { get; set; } = new List<GameSummary>();
+        public PairingSummary[] AvailableGames { get; set; } = new PairingSummary[0];
     }
 
-    public class GetGamesQuery : IRequest<CreateGameResponse>
-    {
-        public Guid PlayerId { get; set; }
-    }
+    public class GetGamesQuery : CommandQueryBase, IRequest<CreateGameResponse> {}
 
     public class GetGamesQueryHandler : IRequestHandler<GetGamesQuery, CreateGameResponse>
     {

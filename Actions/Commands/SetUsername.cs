@@ -4,10 +4,9 @@ using PayMe.Grains;
 
 namespace PayMe.Commands
 {
-    public class SetUsernameCommand : IRequest<bool>
+    public class SetUsernameCommand : CommandQueryBase, IRequest<bool>
     {
-        public Guid PlayerId { get; set; }
-        public string Username { get; set; }
+        public string Username { get; set; } = "";
     }
 
     public class SetUserNameCommandHandler : IRequestHandler<SetUsernameCommand, bool>

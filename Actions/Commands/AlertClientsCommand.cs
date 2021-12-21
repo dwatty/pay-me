@@ -6,7 +6,7 @@ namespace PayMe.Commands
 {
     public class AlertClientsCommand : IRequest
     {
-        public string Message { get; set; }
+        public string Message { get; set; } = "";
     }
 
     public class AlertClientsCommandHandler : IRequestHandler<AlertClientsCommand, Unit>

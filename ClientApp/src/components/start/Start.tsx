@@ -14,9 +14,16 @@ export const Start = () => {
     const setPlayerName = async () => {
         try {
             await service.setPlayerName(username);
+            
+            const playerValue = document.cookie.split('; ').find(c => c.startsWith('playerId'))
+            const id = playerValue?.split("=")[1];
+            
             appDispatch({
                 type: AppActionType.SetUser,
-                payload: username
+                payload: {
+                    username: username,
+                    playerId: id ?? ''
+                }
             });
         }
         catch(err) {

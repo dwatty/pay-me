@@ -1,5 +1,5 @@
 import { Card } from "./card";
-import { GameState } from "./enums";
+import { GameRound, GameState, TurnState } from "./enums";
 
 export class GameSummary {
 
@@ -18,6 +18,12 @@ export class GameSummary {
     public hand: Card[] = [];
     
     public yourMove: boolean = false;
+
+    public round : GameRound = GameRound.Threes;
+
+    public playerTurnState : TurnState = TurnState.NotStarted;
+
+    
 
     // TBD
     public gameStarter: boolean = true;

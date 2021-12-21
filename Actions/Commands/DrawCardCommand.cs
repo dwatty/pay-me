@@ -5,11 +5,7 @@ using PayMe.Models;
 
 namespace PayMe.Commands
 {
-    public class DrawCardCommand : IRequest<Card>
-    {
-        public Guid PlayerId { get; set; }
-        public Guid GameId { get; set; }
-    }
+    public class DrawCardCommand : CommandQueryBase, IRequest<Card> { }
 
     public class DrawCardCommandHandler : IRequestHandler<DrawCardCommand, Card>
     {
@@ -27,8 +23,8 @@ namespace PayMe.Commands
         public async Task<Card> Handle(DrawCardCommand request, CancellationToken cancellationToken)
         {
             var gameGrain = _grainFactory.GetGrain<IGameGrain>(request.GameId);
-            var result = await gameGrain.DrawCard(request.PlayerId);
-            return result;
+            var drawnCard = await gameGrain.DrawCard(request.PlayerId);
+            return drawnCard;
         }
     }
 

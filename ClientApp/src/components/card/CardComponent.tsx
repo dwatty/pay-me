@@ -9,9 +9,9 @@ import clubSvg from '../../content/club.svg';
 import jokerSvg from '../../content/joker.svg';
 
 interface IProps {
-    key: number;
     suite: Suites;
     value: number;
+    click: any;
 }
 
 interface IDisplayProps {
@@ -42,17 +42,17 @@ export const CardDisplay = (props: IDisplayProps) => {
     const getSuite = useMemo(() => {
         switch(props.suite) {
             case Suites.Clubs:
-                return <img src={clubSvg} />;
+                return <img alt="Club Suit" src={clubSvg} />;
             case Suites.Hearts:
-                return <img src={heartSvg} />;
+                return <img alt="Heart Suit" src={heartSvg} />;
             case Suites.Diamonds:
-                return <img src={diamondSvg} />;
+                return <img alt="Diamond Suit" src={diamondSvg} />;
             case Suites.Spades:
-                return <img src={spadeSvg} />;
+                return <img alt="Spade Suit" src={spadeSvg} />;
             case Suites.Jokers:
-                return <img src={jokerSvg} />;
+                return <img alt="Joker Suit" src={jokerSvg} />;
             default:    
-            return <img src={''} />;
+            return <img alt="Placeholder" src={''} />;
         }
     }, [props.suite]);
 
@@ -67,10 +67,8 @@ export const CardDisplay = (props: IDisplayProps) => {
 
 export const CardComponent = (props : IProps) => {
 
-    
-
     return (
-        <div className="card" key={`card-${props.key}`}>
+        <div onClick={props.click} className="card">
             <CardDisplay suite={props.suite} value={props.value} />
             <CardDisplay suite={props.suite} value={props.value} />
         </div>

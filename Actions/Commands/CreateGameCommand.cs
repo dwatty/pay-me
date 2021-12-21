@@ -4,10 +4,7 @@ using PayMe.Grains;
 
 namespace PayMe.Commands
 {
-    public class CreateGameCommand : IRequest<Guid>
-    {   
-        public Guid PlayerId { get; set; }
-    }
+    public class CreateGameCommand : CommandQueryBase, IRequest<Guid> {}
 
     public class CreateGameCommandHandler : IRequestHandler<CreateGameCommand, Guid>
     {

@@ -1,5 +1,7 @@
 import { Card } from "./models/card";
+import { Suites } from "./models/enums";
 import { GameSummary } from "./models/game-summary";
+import { TakeDiscardResponse } from "./models/take-discard-response";
 
 type METHOD = 'GET'|'POST'|'PUT'|'DELETE';
 
@@ -29,6 +31,23 @@ export class GameService {
         return this.makeRequest(`drawcard/${ gameId }`, "POST");
     }
 
+    public async drawDiscard(gameId : string) : Promise<TakeDiscardResponse> {
+        return this.makeRequest(`drawdiscard/${ gameId }`, "POST");
+    }
+
+    public async discard(gameId : string, suite: Suites, value: number) : Promise<Card> {
+        const payload = {
+            suite: suite,
+            value: value
+        };
+
+        return this.makeRequest(`discard/${ gameId }`, "PUT", payload);
+    }
+
+    public async endTurn(gameId : string) {
+        return this.makeRequest(`endturn/${ gameId }`, "PUT");
+    }
+
 
     /**
      * Make an API request
@@ -47,7 +66,14 @@ export class GameService {
             credentials: 'same-origin',
             body: obj ? JSON.stringify(obj) : null
         })
-        .then(res => res.json())
+        .then(res => {
+            try {
+                return res.json();
+            }
+            catch(err) {
+                return res;
+            }
+        })
         .catch(err => {
             console.error(err);
         });

@@ -17,9 +17,13 @@
 }
 
 .card.back {
-   background-color: #b31cf1 !important;
-   border: .9rem double white;
+   background-color: #FFF !important;
+   border: .9rem double #333;
    position: relative;
+}
+
+.card-empty {
+    border: .9rem double #EEE;
 }
 
 .card.back:before {

@@ -40,3 +40,28 @@
     display: flex;
     justify-content: center;
 }
+
+.waiting-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.waiting-screen h1 {
+    font-size: 4rem;
+}
+
+.my-cards-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.turnBadge {
+    background-color: #EEE;
+}

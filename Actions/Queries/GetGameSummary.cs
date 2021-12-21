@@ -1,14 +1,11 @@
 using MediatR;
 using Orleans;
+using PayMe.Commands;
 using PayMe.Grains;
 
 namespace PayMe.Queries
 {
-    public class GetGameSummaryQuery : IRequest<GameSummary>
-    {
-        public Guid PlayerId { get; set; }
-        public Guid GameId { get; set; }
-    }
+    public class GetGameSummaryQuery : CommandQueryBase, IRequest<GameSummary> {}
 
     public class GetGameSummaryQueryHandler : IRequestHandler<GetGameSummaryQuery, GameSummary>
     {

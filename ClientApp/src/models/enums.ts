@@ -13,3 +13,25 @@ export enum Suites {
     Spades,
     Jokers
 }
+
+export enum GameRound {
+    Threes = 0,
+    Fours,
+    Fives,
+    Sixes,
+    Sevens,
+    Eights,
+    Nines,
+    Tens,
+    Jacks,
+    Queens,
+    Kings,
+    Aces
+}
+
+export enum TurnState {
+    NotStarted = 0,
+    TurnStarted,
+    DrewCard,
+    Discarded
+}

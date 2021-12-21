@@ -7,7 +7,6 @@ import { GameService } from '../../service';
 export const Lobby = () => {
 
     const history = useHistory();
-
     const [service] = useState(new GameService());
     const [games, setGames] = useState<GameSummary[]>([]);
     const [availables, setAvailables] = useState<PairingSummary[]>([]);

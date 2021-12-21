@@ -1,3 +1,4 @@
+import { SetUserAction } from "../models/set-user-action";
 import { AppState } from "./context-types";
 
 export enum AppActionType {
@@ -7,7 +8,7 @@ export enum AppActionType {
 
 export interface SetUser {
     type: AppActionType.SetUser;
-    payload: string;
+    payload: SetUserAction;
 }
 
 export interface ClearUser {
@@ -24,10 +25,18 @@ export function appReducer(state: AppState, action: AppActions) {
     let newState;
     switch (action.type) {
         case AppActionType.SetUser:
-            newState = { ...state, username: action.payload };
+            newState = { 
+                ...state, 
+                username: action.payload.username, 
+                playerId: action.payload.playerId 
+            };
             break;
         case AppActionType.ClearUser:
-            newState = { ...state, username: '' };
+            newState = { 
+                ...state, 
+                username: '', 
+                playerId: '' 
+            };
             break;
         default:
             newState = state;
