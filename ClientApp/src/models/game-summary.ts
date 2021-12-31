@@ -1,13 +1,15 @@
 import { Card } from "./card";
-import { GameRound, GameState, TurnState } from "./enums";
+import { GameRound, GameState, RoundState, TurnState } from "./enums";
 
 export class GameSummary {
 
-    public gameId: string = "";
+    public gameId: string = '';
+
+    public gameOwner : string = '';
     
     public state: GameState = GameState.AwaitingPlayers;
     
-    public name: string = "";
+    public name: string = '';
     
     public numPlayers: number = 1;
     
@@ -20,6 +22,8 @@ export class GameSummary {
     public yourMove: boolean = false;
 
     public round : GameRound = GameRound.Threes;
+
+    public roundState : RoundState = RoundState.Waiting;
 
     public playerTurnState : TurnState = TurnState.NotStarted;
 

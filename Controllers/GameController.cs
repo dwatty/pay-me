@@ -20,19 +20,19 @@ namespace PayMe.Controllers
         //
         // Ctor
         public GameController(IGrainFactory grainFactory, ISender mediator)
-        {            
-             _grainFactory = grainFactory;
-             _mediator = mediator;
+        {
+            _grainFactory = grainFactory;
+            _mediator = mediator;
         }
-        
+
         //
         // Set the user's name for their session
         [HttpPost("setname")]
-        public async Task<ActionResult<bool>> SetUser([FromBody]string username)
+        public async Task<ActionResult<bool>> SetUser([FromBody] string username)
         {
-            var cmd = new SetUsernameCommand() 
-            { 
-                PlayerId = this.GetGuid(),
+            var cmd = new SetUsernameCommand()
+            {
+                PlayerId = this.GetPlayerId(),
                 Username = username
             };
 
@@ -45,7 +45,7 @@ namespace PayMe.Controllers
         [Route("info")]
         public async Task<ActionResult<CreateGameResponse>> GetGames()
         {
-            var cmd = new GetGamesQuery() { PlayerId = this.GetGuid() };
+            var cmd = new GetGamesQuery() { PlayerId = this.GetPlayerId() };
             return await _mediator.Send(cmd);
         }
 
@@ -54,19 +54,19 @@ namespace PayMe.Controllers
         [HttpPost("create")]
         public async Task<ActionResult<Guid>> CreateGame()
         {
-            var cmd = new CreateGameCommand() { PlayerId = this.GetGuid() };
+            var cmd = new CreateGameCommand() { PlayerId = this.GetPlayerId() };
             return await _mediator.Send(cmd);
         }
 
         // 
         // Get the current user to join the provided game ID
-        [HttpPut("join/{id}")]
-        public async Task<ActionResult<GameState>> Join(Guid id)
+        [HttpPut("join")]
+        public async Task<ActionResult<GameState>> Join()
         {
-            var cmd = new JoinGameCommand() 
-            { 
-                PlayerId = this.GetGuid(),
-                GameId = id
+            var cmd = new JoinGameCommand()
+            {
+                PlayerId = this.GetPlayerId(),
+                GameId = this.GetGameId()
             };
 
             return await _mediator.Send(cmd);
@@ -77,19 +77,19 @@ namespace PayMe.Controllers
         [HttpPost("alertclients")]
         public async Task AlertClients()
         {
-            var cmd = new AlertClientsCommand() { Message = "Testing 1 2 3"};
+            var cmd = new AlertClientsCommand() { Message = "Testing 1 2 3" };
             await _mediator.Send(cmd);
         }
 
         //
         // Get the summary of the game for initializing client state
-        [HttpGet("summary/{id}")]
-        public async Task<GameSummary> GetGameSummary(Guid id)
+        [HttpGet("summary")]
+        public async Task<GameSummary> GetGameSummary()
         {
             var cmd = new GetGameSummaryQuery()
             {
-                PlayerId = this.GetGuid(),
-                GameId = id
+                PlayerId = this.GetPlayerId(),
+                GameId = this.GetGameId()
             };
 
             return await _mediator.Send(cmd);
@@ -97,13 +97,13 @@ namespace PayMe.Controllers
 
         //
         // Draw the next card as part of a player's turn
-        [HttpPost("drawcard/{id}")]
-        public async Task<Card> DrawCard(Guid id)
+        [HttpPost("drawcard")]
+        public async Task<Card> DrawCard()
         {
             var cmd = new DrawCardCommand()
             {
-                PlayerId = this.GetGuid(),
-                GameId = id
+                PlayerId = this.GetPlayerId(),
+                GameId = this.GetGameId()
             };
 
             return await _mediator.Send(cmd);
@@ -111,13 +111,13 @@ namespace PayMe.Controllers
 
         //
         // Take the current discard as part of a player's turn
-        [HttpPost("drawdiscard/{id}")]
-        public async Task<object> DrawDiscard(Guid id)
+        [HttpPost("drawdiscard")]
+        public async Task<object> DrawDiscard()
         {
             var cmd = new PickDiscardCommand()
             {
-                PlayerId = this.GetGuid(),
-                GameId = id
+                PlayerId = this.GetPlayerId(),
+                GameId = this.GetGameId()
             };
 
             return await _mediator.Send(cmd);
@@ -125,13 +125,13 @@ namespace PayMe.Controllers
 
         //
         // Take the current discard as part of a player's turn
-        [HttpPut("discard/{id}")]
-        public async Task Discard(Guid id, DiscardRequest request)
+        [HttpPut("discard")]
+        public async Task Discard(DiscardRequest request)
         {
             var cmd = new DiscardCardCommand()
             {
-                PlayerId = this.GetGuid(),
-                GameId = id,
+                PlayerId = this.GetPlayerId(),
+                GameId = this.GetGameId(),
                 Suite = request.Suite,
                 Value = request.Value
             };
@@ -140,20 +140,46 @@ namespace PayMe.Controllers
         }
 
 
-       //
-        // End the player's turn
-        [HttpPut("endturn/{id}")]
-        public async Task EndTurn(Guid id)
+        //
+        // Claim a win
+        [HttpPut("claimwin")]
+        public async Task ClaimWin([FromBody]List<List<Card>> handGroups)
         {
-            var cmd = new EndTurnCommand()
+            var cmd = new ClaimWinCommand()
             {
-                PlayerId = this.GetGuid(),
-                GameId = id
+                PlayerId = this.GetPlayerId(),
+                GameId = this.GetGameId(),
+                Groups = handGroups
             };
 
             await _mediator.Send(cmd);
         }
 
+        //
+        // End the player's turn
+        [HttpPut("endturn")]
+        public async Task EndTurn()
+        {
+            var cmd = new EndTurnCommand()
+            {
+                PlayerId = this.GetPlayerId(),
+                GameId = this.GetGameId()
+            };
+
+            await _mediator.Send(cmd);
+        }
+
+        [HttpPut("nextround")]
+        public async Task StartNextRound()
+        {
+            var cmd = new StartNextRoundCommand()
+            {
+                PlayerId = this.GetPlayerId(),
+                GameId = this.GetGameId()
+            };
+
+            await _mediator.Send(cmd);
+        }
 
 
 
@@ -168,7 +194,7 @@ namespace PayMe.Controllers
         {
             var game = _grainFactory.GetGrain<IGameGrain>(id);
             var moves = await game.GetMoves();
-            var summary = await game.GetSummary(this.GetGuid());
+            var summary = await game.GetSummary(this.GetPlayerId());
             return Ok(new { moves = moves, summary = summary });
         }
 
@@ -176,7 +202,7 @@ namespace PayMe.Controllers
         public async Task<IActionResult> MakeMove(Guid id, int x, int y)
         {
             var game = _grainFactory.GetGrain<IGameGrain>(id);
-           // var move = new GameMove { PlayerId = this.GetGuid(), X = x, Y = y };
+            // var move = new GameMove { PlayerId = this.GetGuid(), X = x, Y = y };
             // var state = await game.MakeMove(move);
             //return Ok(state);
             return Ok();
@@ -190,6 +216,6 @@ namespace PayMe.Controllers
             return Ok(state);
         }
 
-        
+
     }
 }

@@ -14,7 +14,8 @@ namespace PayMe.Grains
         Task<object> TakeDiscard(Guid player);
         Task DiscardCard(Guid player, Suites suite, int value);
         Task EndTurn(Guid player);
-
+        Task<ClaimResult> ClaimWin(Guid player, List<List<Card>> groups);
+        Task StartNextRound();
 
 
         Task<GameState> MakeMove(GameMove move);
@@ -36,6 +37,7 @@ namespace PayMe.Grains
     public struct GameSummary
     {
         public Guid GameId { get; set; }
+        public Guid GameOwner { get; set; }
         public GameState State { get; set; }
         public string Name { get; set; }
         public int NumPlayers { get; set; }
@@ -43,9 +45,8 @@ namespace PayMe.Grains
         public List<Card> Hand { get; set; }
         public bool YourMove { get; set; }
         public GameRound Round { get; set; }        
+        public RoundState RoundState { get; set; }
         public TurnState PlayerTurnState { get; set; }
-
-
 
 
         //

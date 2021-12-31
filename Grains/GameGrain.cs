@@ -13,6 +13,7 @@ namespace PayMe.Grains
     [Reentrant]
     public class GameGrain : Grain, IGameGrain
     {
+        //
         // DI
         private readonly IHubContext<GameHub> _gameHub;
         
@@ -25,22 +26,22 @@ namespace PayMe.Grains
         private int _indexNextPlayerToMove = 0;
         // The state of the current game
         public GameState _gameState = GameState.AwaitingPlayers;
-        // List of Available Cards
+        // List of Available Cards to draw from
         private Deck _availableCards = new Deck();
         // List of Cards in Discard Pile
         private Stack<Card> _discardPile = new Stack<Card>();
-        // The current available card
-        //private Card? _drawnCard;
         // Dictionary of Player Hands (Cards by Player ID)
         private Dictionary<Guid, List<Card>> _hands = new Dictionary<Guid, List<Card>>();
         // The current round the game is on
         private GameRound _currentRound = GameRound.Threes;
-
+        // The state of the current player's turn
         private TurnState _currentTurnState = TurnState.NotStarted;
+        // The state of the current round
+        private RoundState _currentRoundState = RoundState.Waiting;        
+        // Dictionary of Round to Winning Player
+        private Dictionary<GameRound, Guid> _roundResults = new Dictionary<GameRound, Guid>();
         
-        
-        
-        
+
         //
         // TBD
         public Guid _winnerId = Guid.Empty;
@@ -100,39 +101,57 @@ namespace PayMe.Grains
             }
 
             // Check if the game is ready to play
-            if (_gameState == GameState.AwaitingPlayers && _playerIds.Count == 2)
+            if(_gameState == GameState.AwaitingPlayers && _playerIds.Count == 2)
             {
-                _availableCards.FillDeck();
-                _availableCards.ShuffleDeck();
-                
-                // Deal Cards to players
-                foreach (var pID in _playerIds)
-                {
-                    for (int i = 0; i < 3; i++)
-                    {
-                        _hands[pID].Add(_availableCards.DrawCard());    
-                    }
-                }
+                await SetupRound(GameRound.Threes);
+            }
 
-                // Prime the discard pile with a single card
-                _discardPile.Push(_availableCards.DrawCard());
+            if(_playerIds.Count == 1) 
+            {
 
-                // a new game is starting
-                _gameState = GameState.InPlay;
-                _currentTurnState = TurnState.TurnStarted;
-                _indexNextPlayerToMove = new Random().Next(0, _playerIds.Count - 1);
-
-                await _gameHub
-                    .Clients
-                    .All
-                    .SendAsync("GameStarted", new {
-                        DiscardPile = _discardPile,
-                        AvailablePile = _availableCards
-                    });
             }
 
             // let user know if game is ready or not
             return _gameState;
+        }
+
+        //
+        // Ready the game for the provided round
+        private async Task SetupRound(GameRound round)
+        {
+            _availableCards.FillDeck();
+            _availableCards.ShuffleDeck();
+            _currentRound = round;
+            
+            
+            // Deal Cards to players
+            foreach (var pID in _playerIds)
+            {
+                _hands[pID].Clear();
+
+                for (int i = 0; i <  (int)round; i++)
+                {
+                    _hands[pID].Add(_availableCards.DrawCard());
+                }
+            }
+
+            // Prime the discard pile with a single card
+            _discardPile.Push(_availableCards.DrawCard());
+
+            // a new game is starting
+            _gameState = GameState.InPlay;
+            _currentTurnState = TurnState.TurnStarted;
+            _currentRoundState = RoundState.InPlay;
+            _indexNextPlayerToMove = new Random().Next(0, _playerIds.Count - 1);
+
+            await _gameHub
+                .Clients
+                .All
+                .SendAsync("GameStarted", new
+                {
+                    DiscardPile = _discardPile,
+                    AvailablePile = _availableCards
+                });
         }
 
         //
@@ -196,7 +215,9 @@ namespace PayMe.Grains
                 LastDiscard = _discardPile.Count > 0 ? _discardPile.Peek() : null,
                 Hand = _hands[player],
                 Round = _currentRound,
-                PlayerTurnState = _currentTurnState
+                RoundState = _currentRoundState,
+                PlayerTurnState = _currentTurnState,
+                GameOwner = _playerIds[0]
             };
         }
 
@@ -246,14 +267,122 @@ namespace PayMe.Grains
         public async Task EndTurn(Guid player)
         {            
             _indexNextPlayerToMove = (_indexNextPlayerToMove + 1) % 2;
+            var nextPlayerId = _playerIds[_indexNextPlayerToMove];
             _currentTurnState = TurnState.TurnStarted;
+
+            // Someone has won this round already, so we need to
+            // stop action after everyone else has had one last turn
+            if(_roundResults.ContainsKey(_currentRound))
+            {
+                // The next player to go is the one that won this round
+                // So consider this the end of the round and reset
+                if(nextPlayerId == _roundResults.GetValueOrDefault(_currentRound))
+                {
+                    _currentRoundState = RoundState.Finished;
+                    await _gameHub
+                        .Clients
+                        .All
+                        .SendAsync("EndRound", _roundResults);
+                }
+            }
+
             await _gameHub
                 .Clients
                 .All
-                .SendAsync("EndTurn", _playerIds[_indexNextPlayerToMove]);
+                .SendAsync("EndTurn", nextPlayerId);
+        }
+
+        //
+        // Claim a win
+        public async Task<ClaimResult> ClaimWin(Guid player, List<List<Card>> groups)
+        {
+            var validGroups = 0;
+            foreach (var grp in groups)
+            {
+                if(grp.Count < 3)
+                {
+                    throw new Exception("A group must have at least 3 cards");
+                }
+                
+                // Matching X of a Kind
+                if(AssertMatchingFaces(grp))
+                {
+                    validGroups++;
+                    continue;
+                }
+
+                // Matching a Run
+                if(AssertRun(grp))
+                {
+                    validGroups ++;
+                    continue;
+                }                
+            }
+
+            if(validGroups == groups.Count)
+            {                
+                // Note that this player wins this round
+                _roundResults.Add(_currentRound, player);
+
+                // Notify all clients that this player won
+                var playerGrain = GrainFactory.GetGrain<IPlayerGrain>(player);
+                var playerName = await playerGrain.GetUsername();
+                await _gameHub
+                    .Clients
+                    .All
+                    .SendAsync("RoundWon", playerName);
+
+                // End this players turn
+                await EndTurn(player);
+
+                return await Task.FromResult(ClaimResult.Valid);
+            }
+            else 
+            {
+                // failure
+                return await Task.FromResult(ClaimResult.Invalid);
+            }
+        }
+
+        //
+        // Reset things and advance to the next round
+        public async Task StartNextRound()
+        {
+            await SetupRound(_currentRound + 1);
         }
 
 
+
+
+
+
+
+        private bool AssertMatchingFaces(List<Card> grp)
+        {
+            var distinctCount = grp.DistinctBy(x => x.Value).Count();
+            return distinctCount == 1;
+        }
+
+        private bool AssertRun(List<Card> grp)
+        {
+
+            var distinctSuite = grp.DistinctBy(x => x.Suite).Count();
+            if(distinctSuite > 1) 
+            {
+                return false;
+            }
+
+            var orderedList = grp.OrderBy(x => x.Value).ToList();
+            for (int i = 0; i < orderedList.Count-1; i++)
+            {
+                if(orderedList[i].Value + 1 != orderedList[i+1].Value)
+                {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
 
 
 
@@ -347,13 +476,6 @@ namespace PayMe.Grains
         //     indexNextPlayerToMove = (indexNextPlayerToMove + 1) % 2;
              return _gameState;
         }
-
-        private bool IsWinningLine(int i, int j, int k) => (i, j, k) switch
-        {
-            (0, 0, 0) => true,
-            (1, 1, 1) => true,
-            _ => false
-        };
 
         public Task<GameState> GetState() => Task.FromResult(_gameState);
 

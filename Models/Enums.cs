@@ -38,7 +38,7 @@ namespace PayMe.Enums
     [Serializable]
     public enum GameRound
     {
-        Threes = 0,
+        Threes = 3,
         Fours,
         Fives,
         Sixes,
@@ -58,5 +58,20 @@ namespace PayMe.Enums
         TurnStarted,
         DrewCard,
         Discarded
+    }
+
+    public enum RoundState
+    {
+        Waiting = 0,
+        InPlay,
+        Finished
+
+    }
+
+
+    public enum ClaimResult
+    {
+        Valid = 0,
+        Invalid
     }
 }

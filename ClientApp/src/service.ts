@@ -8,31 +8,31 @@ type METHOD = 'GET'|'POST'|'PUT'|'DELETE';
 export class GameService {
 
     public async getOpenGames() {
-        return this.makeRequest("info", "GET");
-    }
-
-    public async getGameSummary(gameId : string) : Promise<GameSummary> {
-        return this.makeRequest(`summary/${ gameId }`, 'GET');
+        return this.makeNonGameRequest("info", "GET");
     }
 
     public async createGame() {
-        return this.makeRequest("create", "POST");
+        return this.makeNonGameRequest("create", "POST");
     }
 
     public async setPlayerName(name : string) {
-        return this.makeRequest("setName", "POST", name);
+        return this.makeNonGameRequest("setName", "POST", name);
+    }
+
+    public async getGameSummary(gameId : string) : Promise<GameSummary> {
+        return this.makeGameRequest('summary', gameId, 'GET');
     }
 
     public async joinGame(gameId : string) {
-        return this.makeRequest(`join/${ gameId }`, "PUT");
+        return this.makeGameRequest('join', gameId, "PUT");
     }
 
     public async drawCard(gameId : string) : Promise<Card> {
-        return this.makeRequest(`drawcard/${ gameId }`, "POST");
+        return this.makeGameRequest('drawcard', gameId, "POST");
     }
 
     public async drawDiscard(gameId : string) : Promise<TakeDiscardResponse> {
-        return this.makeRequest(`drawdiscard/${ gameId }`, "POST");
+        return this.makeGameRequest('drawdiscard', gameId, "POST");
     }
 
     public async discard(gameId : string, suite: Suites, value: number) : Promise<Card> {
@@ -41,13 +41,37 @@ export class GameService {
             value: value
         };
 
-        return this.makeRequest(`discard/${ gameId }`, "PUT", payload);
+        return this.makeGameRequest('discard', gameId, "PUT", payload);
     }
 
     public async endTurn(gameId : string) {
-        return this.makeRequest(`endturn/${ gameId }`, "PUT");
+        return this.makeGameRequest('endturn', gameId, "PUT");
     }
 
+    public async claimWin(gameId : string, handGroups : Card[][]) {
+        return this.makeGameRequest('claimwin', gameId, "PUT", handGroups);
+    }
+
+    public async startNextRound(gameId : string) {
+        return this.makeGameRequest('nextround', gameId, "PUT");
+    }
+
+    //
+    // Used for making game specific requests, will pass the game ID
+    // as a header in the request
+    private async makeGameRequest(url: string, gameId: string, method: METHOD, obj? : any) {
+        let headers = {
+            "X-GAME-ID": gameId
+        };
+
+        return this._makeRequest(url, method, headers, obj);
+    }
+
+    //
+    // Used for making non-game specific requests.
+    private async makeNonGameRequest(url: string, method: METHOD, obj?: any) {
+        return this._makeRequest(url, method, undefined, obj);
+    }
 
     /**
      * Make an API request
@@ -56,23 +80,27 @@ export class GameService {
      * @param obj An optional body object
      * @returns A promise for the request to be awaited
      */
-    private async makeRequest(url : string, method: METHOD, obj?: any) {
+    private async _makeRequest(url : string, method: METHOD, headerOverrides?: {}, obj?: any) {
+        let headers = {
+            Accept: "application/json, text/plain",
+            "Content-Type": "application/json;charset=UTF-8",
+        };
+
+        if(headerOverrides) {
+            headers = { ...headers, ...headerOverrides };
+        }
+
         return fetch(`game/${ url }`, {
             method: method,
-            headers: {
-                Accept: "application/json, text/plain",
-                "Content-Type": "application/json;charset=UTF-8",
-            },
+            headers: headers,
             credentials: 'same-origin',
             body: obj ? JSON.stringify(obj) : null
         })
-        .then(res => {
-            try {
-                return res.json();
-            }
-            catch(err) {
-                return res;
-            }
+        .then(res => { 
+            return res.text() 
+        })
+        .then(res => { 
+            return res ? JSON.parse(res) : {} 
         })
         .catch(err => {
             console.error(err);

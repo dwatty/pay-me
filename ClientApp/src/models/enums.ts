@@ -35,3 +35,9 @@ export enum TurnState {
     DrewCard,
     Discarded
 }
+
+export enum RoundState {
+    Waiting = 0,
+    InPlay,
+    Finished
+}
