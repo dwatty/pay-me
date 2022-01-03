@@ -3,6 +3,7 @@ using Orleans;
 using Orleans.Concurrency;
 using PayMe.Enums;
 using PayMe.Hubs;
+using PayMe.Infrastructure;
 using PayMe.Models;
 
 namespace PayMe.Grains
@@ -296,31 +297,10 @@ namespace PayMe.Grains
         // Claim a win
         public async Task<ClaimResult> ClaimWin(Guid player, List<List<Card>> groups)
         {
-            var validGroups = 0;
-            foreach (var grp in groups)
+            var isWin = ValidityEngine.ClaimWin(groups, _currentRound);
+
+            if(isWin == ClaimResult.Valid)
             {
-                if(grp.Count < 3)
-                {
-                    throw new Exception("A group must have at least 3 cards");
-                }
-                
-                // Matching X of a Kind
-                if(AssertMatchingFaces(grp))
-                {
-                    validGroups++;
-                    continue;
-                }
-
-                // Matching a Run
-                if(AssertRun(grp))
-                {
-                    validGroups ++;
-                    continue;
-                }                
-            }
-
-            if(validGroups == groups.Count)
-            {                
                 // Note that this player wins this round
                 _roundResults.Add(_currentRound, player);
 
@@ -337,9 +317,8 @@ namespace PayMe.Grains
 
                 return await Task.FromResult(ClaimResult.Valid);
             }
-            else 
+            else
             {
-                // failure
                 return await Task.FromResult(ClaimResult.Invalid);
             }
         }
@@ -357,32 +336,9 @@ namespace PayMe.Grains
 
 
 
-        private bool AssertMatchingFaces(List<Card> grp)
-        {
-            var distinctCount = grp.DistinctBy(x => x.Value).Count();
-            return distinctCount == 1;
-        }
 
-        private bool AssertRun(List<Card> grp)
-        {
 
-            var distinctSuite = grp.DistinctBy(x => x.Suite).Count();
-            if(distinctSuite > 1) 
-            {
-                return false;
-            }
-
-            var orderedList = grp.OrderBy(x => x.Value).ToList();
-            for (int i = 0; i < orderedList.Count-1; i++)
-            {
-                if(orderedList[i].Value + 1 != orderedList[i+1].Value)
-                {
-                    return false;
-                }
-            }
-            
-            return true;
-        }
+     
 
 
 
