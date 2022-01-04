@@ -18,7 +18,7 @@ public class SingleGroupAlikeTests
         };
 
         var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public class SingleGroupAlikeTests
         };
 
         var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public class SingleGroupAlikeTests
         };
 
         var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Nines);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     [Fact]
@@ -60,7 +60,7 @@ public class SingleGroupAlikeTests
         };
 
         var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     [Fact]
@@ -74,7 +74,7 @@ public class SingleGroupAlikeTests
         };
 
         var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     [Fact]
@@ -88,7 +88,7 @@ public class SingleGroupAlikeTests
         };
 
         var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     [Fact]
@@ -102,7 +102,7 @@ public class SingleGroupAlikeTests
         };
 
         var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     [Fact]
@@ -116,7 +116,7 @@ public class SingleGroupAlikeTests
         };
 
         var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, false);
+        Assert.False(result);
     }
     
     [Fact]
@@ -130,7 +130,7 @@ public class SingleGroupAlikeTests
         };
 
         var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, false);
+        Assert.False(result);
     }
 
     [Fact]
@@ -144,7 +144,7 @@ public class SingleGroupAlikeTests
         };
 
         var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, false);
+        Assert.False(result);
     }
 
     [Fact]
@@ -158,7 +158,7 @@ public class SingleGroupAlikeTests
         };
 
         var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     
@@ -175,7 +175,7 @@ public class SingleGroupAlikeTests
         };
 
         var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Fives);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
 }

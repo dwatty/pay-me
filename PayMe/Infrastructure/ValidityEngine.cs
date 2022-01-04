@@ -5,46 +5,67 @@ namespace PayMe.Infrastructure
 {
     public static class ValidityEngine
     {
-        public static ClaimResult ClaimWin(List<List<Card>> groups, GameRound round)
+        public static ValidityResult ValidateHand(List<List<Card>> sets, GameRound round)
         {
+            var validity = new ValidityResult();
+
             // The total number of cards in the hand must 
             // equal the round amount
-            var cardCount = groups.Sum(x => x.Count);
+            var cardCount = sets.Sum(x => x.Count);
             if (cardCount != (int)round)
             {
-                return ClaimResult.Invalid;
+                validity.IsInvalidCollection = true;
             }
 
-            var validGroups = 0;
-            foreach (var grp in groups)
+            foreach (var set in sets)
             {
-                if (grp.Count < 3 || grp.Count > (int)round)
-                {
-                    return ClaimResult.Invalid;
-                }
+                var setResult = new SetValidityResult(set);
 
+                // If the card count isn't valid, that's an immediate fail
+                if (set.Count < 3 || set.Count > (int)round)
+                {
+                    setResult.IsValid = false;
+                    // var setResult = new SetValidityResult(set, false);
+                    //validity.Results.Add(setResult);
+                }
                 // Matching X of a Kind
-                if (AssertMatchingFaces(grp, round))
+                else if (AssertMatchingFaces(set, round))
                 {
-                    validGroups++;
-                    continue;
+                    setResult.IsValid = true;
+                    // var setResult = new SetValidityResult(set, true);
+                    // validity.Results.Add(setResult);
+                    //continue;
                 }
-
                 // Matching a Run
-                if (AssertRun(grp, round))
+                else if (AssertRun(set, round))
                 {
-                    validGroups++;
-                    continue;
+                    setResult.IsValid = true;
+                    // var setResult = new SetValidityResult(set, true);
+                    // validity.Results.Add(setResult);
+                    //continue;
                 }
+                // No run or X of a kind
+                else
+                {
+                    setResult.IsValid = false;
+                    // var setResult = new SetValidityResult(set, false);
+                    // validity.Results.Add(setResult);    
+                }
+                
+                // Add our set result to our overall result
+                validity.Results.Add(setResult);
+                
             }
 
-            return (validGroups == groups.Count) ? ClaimResult.Valid : ClaimResult.Invalid;            
+            return validity;
         }
 
-
-        public static bool AssertMatchingFaces(List<Card> grp, GameRound round)
+        //
+        // Check the provided list of Cards for a valid set of matching faces.
+        // e.g. 3D-3H-3S
+        public static bool AssertMatchingFaces(List<Card> set, GameRound round)
         {
-            var distinctCount = grp
+            var distinctCount = set
                 .Where(x => x.Value != (int)round && x.Value != Constants.JOKER)
                 .DistinctBy(x => x.Value)
                 .Count();
@@ -52,9 +73,12 @@ namespace PayMe.Infrastructure
             return distinctCount == 1 || distinctCount == 0;
         }
 
-        public static bool AssertRun(List<Card> grp, GameRound round)
+        // 
+        // Check the provided list of Cards for a valid run of at least 3 cards
+        // e.g. 5D-6D-7D-8D
+        public static bool AssertRun(List<Card> set, GameRound round)
         {
-            if (grp.Count > (int)round)
+            if (set.Count > (int)round)
             {
                 return false;
             }
@@ -62,7 +86,7 @@ namespace PayMe.Infrastructure
             // For it to be a valid run, all suites, except wilds
             // must match.  A basic check that this is true to skip
             // further processing
-            var distinctCount = grp
+            var distinctCount = set
                 .Where(x => x.Value != (int)round && x.Value != Constants.JOKER)
                 .DistinctBy(x => x.Suite)
                 .Count();
@@ -78,12 +102,12 @@ namespace PayMe.Infrastructure
             //     .Where(x => x.Value == (int)round || x.Value == Constants.JOKER)
             //     .Count();
 
-            var wildCards = grp
+            var wildCards = set
                 .Where(x => x.Value == (int)round || x.Value == Constants.JOKER)
                 .Select(x => x)
                 .ToList();
 
-            var orderedList = grp
+            var orderedList = set
                 .Where(x => x.Value != (int)round && x.Value != Constants.JOKER)
                 .OrderBy(x => x.Value)
                 .ToList();
@@ -98,7 +122,7 @@ namespace PayMe.Infrastructure
             }
 
             var logicalHand = new List<Card>();
-            for (int i = 0; i < grp.Count; i++)
+            for (int i = 0; i < set.Count; i++)
             {
                 // First time through, treat card 0
                 // as the start of our run
