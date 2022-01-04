@@ -26,9 +26,8 @@ public class MultiGroupTests
             }
         };
 
-        var result = ValidityEngine.ClaimWin(hand, Enums.GameRound.Sixes);
-
-        Assert.Equal(result, Enums.ClaimResult.Valid);
+        var result = ValidityEngine.ValidateHand(hand, Enums.GameRound.Sixes);
+        Assert.True(result.AllSetsValid());
     }
 
     [Fact]
@@ -50,9 +49,8 @@ public class MultiGroupTests
             }
         };
 
-        var result = ValidityEngine.ClaimWin(hand, Enums.GameRound.Nines);
-
-        Assert.Equal(result, Enums.ClaimResult.Invalid);
+        var result = ValidityEngine.ValidateHand(hand, Enums.GameRound.Nines);
+        Assert.True(result.IsInvalidCollection);
     }
 
     [Fact]
@@ -80,9 +78,8 @@ public class MultiGroupTests
             }
         };
 
-        var result = ValidityEngine.ClaimWin(hand, Enums.GameRound.Nines);
-
-        Assert.Equal(result, Enums.ClaimResult.Valid);
+        var result = ValidityEngine.ValidateHand(hand, Enums.GameRound.Nines);
+        Assert.True(result.AllSetsValid());
     }    
 
 
@@ -111,9 +108,8 @@ public class MultiGroupTests
             }
         };
 
-        var result = ValidityEngine.ClaimWin(hand, Enums.GameRound.Nines);
-
-        Assert.Equal(result, Enums.ClaimResult.Valid);
+        var result = ValidityEngine.ValidateHand(hand, Enums.GameRound.Nines);
+        Assert.True(result.AllSetsValid());
     }    
 
 }

@@ -297,9 +297,9 @@ namespace PayMe.Grains
         // Claim a win
         public async Task<ClaimResult> ClaimWin(Guid player, List<List<Card>> groups)
         {
-            var isWin = ValidityEngine.ClaimWin(groups, _currentRound);
+            var isWin = ValidityEngine.ValidateHand(groups, _currentRound);
 
-            if(isWin == ClaimResult.Valid)
+            if(isWin.AllSetsValid())
             {
                 // Note that this player wins this round
                 _roundResults.Add(_currentRound, player);

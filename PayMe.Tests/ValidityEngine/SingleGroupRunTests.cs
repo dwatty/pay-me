@@ -21,7 +21,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     [Fact]
@@ -35,7 +35,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, false);
+        Assert.False(result);
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     [Fact]
@@ -77,7 +77,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, false);
+        Assert.False(result);
     }
 
     [Fact]
@@ -91,7 +91,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, false);
+        Assert.False(result);
     }
    
     [Fact]
@@ -105,7 +105,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Sevens);
-        Assert.Equal(result, false);
+        Assert.False(result);
     }
 
     #endregion
@@ -124,7 +124,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Fours);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     [Fact]
@@ -139,7 +139,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Aces);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     [Fact]
@@ -154,7 +154,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Sevens);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     // Physical: 2H, 9D, 5H, 9S
@@ -171,7 +171,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Nines);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     [Fact]
@@ -186,7 +186,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Fours);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
 
@@ -202,7 +202,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Tens);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     // Physical: 10H, 10D, 4H, 5H, AH
@@ -220,7 +220,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Tens);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     #endregion
@@ -240,7 +240,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Fives);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     [Fact]
@@ -256,7 +256,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Fives);
-        Assert.Equal(result, false);
+        Assert.False(result);
     }
 
     // Physical: 2H, 9D, 5H, 9S, 9H
@@ -274,7 +274,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Nines);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }    
 
     // Physical: 2H, 9D, 10H, 9S, 9H
@@ -292,7 +292,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Nines);
-        Assert.Equal(result, false);
+        Assert.False(result);
     }        
 
     [Fact]
@@ -308,7 +308,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
-        Assert.Equal(result, false);
+        Assert.False(result);
     }
 
     [Fact]
@@ -324,7 +324,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Tens);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }    
 
     #endregion
@@ -346,7 +346,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Sevens);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
 
@@ -365,7 +365,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Sevens);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
 
@@ -384,7 +384,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Sevens);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
    [Fact]
@@ -402,7 +402,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Sevens);
-        Assert.Equal(result, false);
+        Assert.False(result);
     }
 
     #endregion
@@ -430,7 +430,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Aces);
-        Assert.Equal(result, true);
+        Assert.True(result);
     }
 
     #endregion
@@ -455,7 +455,7 @@ public class SingleGroupRunTests
         };
 
         var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Aces);
-        Assert.Equal(result, false);
+        Assert.False(result);
     }
 
     #endregion
