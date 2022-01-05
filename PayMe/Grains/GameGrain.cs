@@ -28,7 +28,7 @@ namespace PayMe.Grains
         // The state of the current game
         public GameState _gameState = GameState.AwaitingPlayers;
         // List of Available Cards to draw from
-        private Deck _availableCards = new Deck();
+        private IDeck _availableCards;
         // List of Cards in Discard Pile
         private Stack<Card> _discardPile = new Stack<Card>();
         // Dictionary of Player Hands (Cards by Player ID)
@@ -40,7 +40,7 @@ namespace PayMe.Grains
         // The state of the current round
         private RoundState _currentRoundState = RoundState.Waiting;        
         // Dictionary of Round to Winning Player
-        private Dictionary<GameRound, Guid> _roundResults = new Dictionary<GameRound, Guid>();
+        private Dictionary<GameRound, List<RoundResult>> _roundResults = new Dictionary<GameRound, List<RoundResult>>();
         
 
         //
@@ -57,9 +57,10 @@ namespace PayMe.Grains
 
         //
         // Ctor
-        public GameGrain(IHubContext<GameHub> gameHubContext)
+        public GameGrain(IHubContext<GameHub> gameHubContext, IDeck deck)
         {
             _gameHub = gameHubContext;
+            _availableCards = deck;
         }
 
         //
@@ -265,7 +266,7 @@ namespace PayMe.Grains
 
         //
         // End the player's turns
-        public async Task EndTurn(Guid player)
+        public async Task EndTurn(Guid player, List<List<Card>> groups)
         {            
             _indexNextPlayerToMove = (_indexNextPlayerToMove + 1) % 2;
             var nextPlayerId = _playerIds[_indexNextPlayerToMove];
@@ -273,20 +274,34 @@ namespace PayMe.Grains
 
             // Someone has won this round already, so we need to
             // stop action after everyone else has had one last turn
-            if(_roundResults.ContainsKey(_currentRound))
+            // We also need to score people's hands            
+            if(_roundResults.TryGetValue(_currentRound, out var currentRoundResult))
             {
                 // The next player to go is the one that won this round
                 // So consider this the end of the round and reset
-                if(nextPlayerId == _roundResults.GetValueOrDefault(_currentRound))
+                if(nextPlayerId == currentRoundResult[0].PlayerId)
                 {
                     _currentRoundState = RoundState.Finished;
+                    
                     await _gameHub
                         .Clients
                         .All
                         .SendAsync("EndRound", _roundResults);
                 }
-            }
+                else
+                {
+                    var validityResult = ValidityEngine.ValidateHand(groups, _currentRound);
+                    var score = ScoringEngine.ScoreHand(validityResult, _currentRound);
 
+                    currentRoundResult.Add(new RoundResult
+                    {
+                        PlayerId = player,
+                        Score = score
+                    });                    
+                }
+            }
+            
+            // Notify clients that the turn is over and who is up next
             await _gameHub
                 .Clients
                 .All
@@ -297,13 +312,26 @@ namespace PayMe.Grains
         // Claim a win
         public async Task<ClaimResult> ClaimWin(Guid player, List<List<Card>> groups)
         {
-            var isWin = ValidityEngine.ValidateHand(groups, _currentRound);
-
-            if(isWin.AllSetsValid())
+            var validityResult = ValidityEngine.ValidateHand(groups, _currentRound);
+            if(validityResult.AllSetsValid())
             {
-                // Note that this player wins this round
-                _roundResults.Add(_currentRound, player);
-
+                // Note that this player wins this round.
+                // Confirm that score is calculated as zero for sanity
+                var score = ScoringEngine.ScoreHand(validityResult, _currentRound);
+                if(score == 0)
+                {
+                    var roundResults = new List<RoundResult>()
+                    {
+                        new RoundResult() { PlayerId = player, Score = score }
+                    };
+                    
+                    _roundResults.Add(_currentRound, roundResults);
+                }
+                else
+                {
+                    throw new Exception("Winning hand was found but score wasn't zero.");
+                }
+                
                 // Notify all clients that this player won
                 var playerGrain = GrainFactory.GetGrain<IPlayerGrain>(player);
                 var playerName = await playerGrain.GetUsername();
@@ -313,7 +341,7 @@ namespace PayMe.Grains
                     .SendAsync("RoundWon", playerName);
 
                 // End this players turn
-                await EndTurn(player);
+                await EndTurn(player, groups);
 
                 return await Task.FromResult(ClaimResult.Valid);
             }
@@ -430,7 +458,7 @@ namespace PayMe.Grains
 
         //     // if game hasnt ended, prepare for next players move
         //     indexNextPlayerToMove = (indexNextPlayerToMove + 1) % 2;
-             return _gameState;
+             return await Task.FromResult(_gameState);
         }
 
         public Task<GameState> GetState() => Task.FromResult(_gameState);

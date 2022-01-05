@@ -2,6 +2,8 @@ using Orleans.Hosting;
 using System.Net;
 using MediatR;
 using PayMe.Hubs;
+using PayMe.Models;
+using PayMe.Infrastructure;
 
 await Host.CreateDefaultBuilder(args)
     .UseOrleans((ctx, siloBuilder) =>
@@ -36,6 +38,8 @@ public class Startup
         services.AddSignalR(hubOptions => {
             hubOptions.EnableDetailedErrors = true;
         });
+
+        services.AddTransient<IDeck, StandardDeck>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

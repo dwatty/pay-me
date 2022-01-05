@@ -13,7 +13,7 @@ namespace PayMe.Grains
         Task<Card> DrawCard(Guid player);
         Task<object> TakeDiscard(Guid player);
         Task DiscardCard(Guid player, Suites suite, int value);
-        Task EndTurn(Guid player);
+        Task EndTurn(Guid player, List<List<Card>> groups);
         Task<ClaimResult> ClaimWin(Guid player, List<List<Card>> groups);
         Task StartNextRound();
 

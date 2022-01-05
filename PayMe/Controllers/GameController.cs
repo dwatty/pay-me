@@ -189,32 +189,32 @@ namespace PayMe.Controllers
 
 
 
-        [HttpGet("{id}/moves")]
-        public async Task<IActionResult> GetMoves(Guid id)
-        {
-            var game = _grainFactory.GetGrain<IGameGrain>(id);
-            var moves = await game.GetMoves();
-            var summary = await game.GetSummary(this.GetPlayerId());
-            return Ok(new { moves = moves, summary = summary });
-        }
+        // [HttpGet("{id}/moves")]
+        // public async Task<IActionResult> GetMoves(Guid id)
+        // {
+        //     var game = _grainFactory.GetGrain<IGameGrain>(id);
+        //     var moves = await game.GetMoves();
+        //     var summary = await game.GetSummary(this.GetPlayerId());
+        //     return Ok(new { moves = moves, summary = summary });
+        // }
 
-        [HttpPost("move")]
-        public async Task<IActionResult> MakeMove(Guid id, int x, int y)
-        {
-            var game = _grainFactory.GetGrain<IGameGrain>(id);
-            // var move = new GameMove { PlayerId = this.GetGuid(), X = x, Y = y };
-            // var state = await game.MakeMove(move);
-            //return Ok(state);
-            return Ok();
-        }
+        // [HttpPost("move")]
+        // public async Task<IActionResult> MakeMove(Guid id, int x, int y)
+        // {
+        //     var game = _grainFactory.GetGrain<IGameGrain>(id);
+        //     // var move = new GameMove { PlayerId = this.GetGuid(), X = x, Y = y };
+        //     // var state = await game.MakeMove(move);
+        //     //return Ok(state);
+        //     return Ok();
+        // }
 
-        [HttpGet("query")]
-        public async Task<IActionResult> QueryGame(Guid id)
-        {
-            var game = _grainFactory.GetGrain<IGameGrain>(id);
-            var state = await game.GetState();
-            return Ok(state);
-        }
+        // [HttpGet("query")]
+        // public async Task<IActionResult> QueryGame(Guid id)
+        // {
+        //     var game = _grainFactory.GetGrain<IGameGrain>(id);
+        //     var state = await game.GetState();
+        //     return Ok(state);
+        // }
 
 
     }

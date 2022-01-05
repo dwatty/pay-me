@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace PayMe.Hubs
 {
+    
     public class GameHub : Hub
     {
         private readonly ILogger<GameHub> _logger;
