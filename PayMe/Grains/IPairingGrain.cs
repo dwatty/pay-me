@@ -17,6 +17,6 @@ namespace PayMe.Grains
     public class PairingSummary
     {
         public Guid GameId { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = "";
     }
 }
