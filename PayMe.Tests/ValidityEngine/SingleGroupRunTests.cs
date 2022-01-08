@@ -25,6 +25,62 @@ public class SingleGroupRunTests
     }
 
     [Fact]
+    public void RunOfThree_FullHand_AceHighWithWild_Valid()
+    {
+        var hand = new List<Card>
+        {
+            new Card(Constants.ACE, Enums.Suites.Clubs),
+            new Card(3, Enums.Suites.Clubs),
+            new Card(Constants.QUEEN, Enums.Suites.Clubs),
+        };
+
+        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void RunOfThree_FullHand_LowRunWithWild_Valid()
+    {
+        var hand = new List<Card>
+        {
+            new Card(2, Enums.Suites.Clubs),
+            new Card(10, Enums.Suites.Clubs),
+            new Card(4, Enums.Suites.Clubs),
+        };
+
+        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Tens);
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void RunOfThree_FullHand_AceLowWithWild_Valid()
+    {
+        var hand = new List<Card>
+        {
+            new Card(Constants.ACE, Enums.Suites.Clubs),
+            new Card(2, Enums.Suites.Clubs),
+            new Card(3, Enums.Suites.Clubs),
+        };
+
+        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void RunOfThree_FullHand_AceHighWithQueenWild_Valid()
+    {
+        var hand = new List<Card>
+        {
+            new Card(Constants.ACE, Enums.Suites.Clubs),
+            new Card(3, Enums.Suites.Clubs),
+            new Card(Constants.KING, Enums.Suites.Clubs),
+        };
+
+        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
+        Assert.True(result);
+    }
+
+    [Fact]
     public void RunOfThree_FullHand_NoWilds_Invalid()
     {
         var hand = new List<Card>

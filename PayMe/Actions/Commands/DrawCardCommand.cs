@@ -3,29 +3,27 @@ using Orleans;
 using PayMe.Grains;
 using PayMe.Models;
 
-namespace PayMe.Commands
+namespace PayMe.Commands;
+
+public class DrawCardCommand : CommandQueryBase, IRequest<Card> { }
+
+public class DrawCardCommandHandler : IRequestHandler<DrawCardCommand, Card>
 {
-    public class DrawCardCommand : CommandQueryBase, IRequest<Card> { }
+    private readonly ILogger<DrawCardCommand> _logger;
+    private readonly IGrainFactory _grainFactory;
 
-    public class DrawCardCommandHandler : IRequestHandler<DrawCardCommand, Card>
+    public DrawCardCommandHandler(
+        ILogger<DrawCardCommand> logger,
+        IGrainFactory grainFactory
+    )
     {
-        private readonly ILogger<DrawCardCommand> _logger;
-        private readonly IGrainFactory _grainFactory;
-
-        public DrawCardCommandHandler(
-            ILogger<DrawCardCommand> logger,
-            IGrainFactory grainFactory
-        )
-        {
-            _logger = logger;
-            _grainFactory = grainFactory;
-        }
-        public async Task<Card> Handle(DrawCardCommand request, CancellationToken cancellationToken)
-        {
-            var gameGrain = _grainFactory.GetGrain<IGameGrain>(request.GameId);
-            var drawnCard = await gameGrain.DrawCard(request.PlayerId);
-            return drawnCard;
-        }
+        _logger = logger;
+        _grainFactory = grainFactory;
     }
-
+    public async Task<Card> Handle(DrawCardCommand request, CancellationToken cancellationToken)
+    {
+        var gameGrain = _grainFactory.GetGrain<IGameGrain>(request.GameId);
+        var drawnCard = await gameGrain.DrawCard(request.PlayerId);
+        return drawnCard;
+    }
 }

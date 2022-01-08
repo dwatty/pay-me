@@ -41,3 +41,8 @@ export enum RoundState {
     InPlay,
     Finished
 }
+
+export enum ClaimResult {
+    Valid = 0,
+    Invalid
+}

@@ -1,0 +1,41 @@
+.game-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background-color: #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-top: 1px solid #333;
+}
+
+.status-dot {
+    height: 1rem;
+    width: 1rem;
+    border-radius: 50%;
+    display: inline-block;
+    background-color: #CCC;
+    margin-right: .5rem;
+}
+
+.gamebar-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+.gamebar-buttons button {
+    margin: 0 .8rem;
+}
+
+.connected {
+    background-color: limegreen;
+}
+
+.not-connected {
+    background-color: red;
+}

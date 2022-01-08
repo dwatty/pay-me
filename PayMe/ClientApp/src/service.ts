@@ -1,5 +1,5 @@
 import { Card } from "./models/card";
-import { Suites } from "./models/enums";
+import { ClaimResult, Suites } from "./models/enums";
 import { GameSummary } from "./models/game-summary";
 import { TakeDiscardResponse } from "./models/take-discard-response";
 
@@ -44,11 +44,11 @@ export class GameService {
         return this.makeGameRequest('discard', gameId, "PUT", payload);
     }
 
-    public async endTurn(gameId : string) {
-        return this.makeGameRequest('endturn', gameId, "PUT");
+    public async endTurn(gameId : string, handGroups : Card[][]) {
+        return this.makeGameRequest('endturn', gameId, "PUT", handGroups);
     }
 
-    public async claimWin(gameId : string, handGroups : Card[][]) {
+    public async claimWin(gameId : string, handGroups : Card[][]) : Promise<ClaimResult> {
         return this.makeGameRequest('claimwin', gameId, "PUT", handGroups);
     }
 

@@ -1,10 +1,10 @@
 
 .card {
-    background-color: #EEE;
-    border: 1px solid #CCC;
+    background-color: #FFFFFF;
+    border: 7px double #e64c3c;
     border-radius: .8rem;
-    height: 220px;
-    width: 160px;
+    height: 200px;
+    width: 135px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -16,9 +16,13 @@
     box-shadow: 2px 2px 2px #333;
 }
 
+.card.black {
+    border-color: #474c59;
+}
+
 .card.back {
    background-color: #FFF !important;
-   border: .9rem double #333;
+   border: .9rem double #c3c3c3;
    position: relative;
 }
 
@@ -50,20 +54,20 @@
 }
 
 .card img {
-    height: 50px;
-    width: 50px;
+    height: 30px;
+    width: 30px;
     display: block;
 }
 
 .card-display {
     position: absolute;
     top: 0rem;
-    left: 1rem;
+    left: .4rem;
 }
 
 .card-display:last-child {
     bottom: 1rem;
-    right: 1rem;
+    right: .4rem;
     left: auto;
     top: auto;
 }

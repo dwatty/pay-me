@@ -2,33 +2,32 @@ using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using PayMe.Hubs;
 
-namespace PayMe.Commands
+namespace PayMe.Commands;
+
+public class AlertClientsCommand : IRequest
 {
-    public class AlertClientsCommand : IRequest
+    public string Message { get; set; } = "";
+}
+
+public class AlertClientsCommandHandler : IRequestHandler<AlertClientsCommand, Unit>
+{
+    private readonly IHubContext<GameHub> _gameHubContext;
+    
+    public AlertClientsCommandHandler(IHubContext<GameHub> gameHubContext)
     {
-        public string Message { get; set; } = "";
+        _gameHubContext = gameHubContext;
     }
 
-    public class AlertClientsCommandHandler : IRequestHandler<AlertClientsCommand, Unit>
+    public async Task<Unit> Handle(AlertClientsCommand request, CancellationToken cancellationToken)
     {
-        private readonly IHubContext<GameHub> _gameHubContext;
-        
-        public AlertClientsCommandHandler(IHubContext<GameHub> gameHubContext)
-        {
-            _gameHubContext = gameHubContext;
-        }
+        await _gameHubContext
+            .Clients
+            .All
+            .SendAsync(
+                "ConnectivityTest", 
+                "Connectivity test in progress, testing testing 1 2 3"
+            );
 
-        public async Task<Unit> Handle(AlertClientsCommand request, CancellationToken cancellationToken)
-        {
-            await _gameHubContext
-                .Clients
-                .All
-                .SendAsync(
-                    "ConnectivityTest", 
-                    "Connectivity test in progress, testing testing 1 2 3"
-                );
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

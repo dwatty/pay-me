@@ -3,35 +3,34 @@ using Orleans;
 using PayMe.Enums;
 using PayMe.Grains;
 
-namespace PayMe.Commands
+namespace PayMe.Commands;
+
+public class JoinGameCommand : CommandQueryBase, IRequest<GameState> { }
+
+public class JoinGameCommandHandler : IRequestHandler<JoinGameCommand, GameState>
 {
-    public class JoinGameCommand : CommandQueryBase, IRequest<GameState> { }
+    private readonly ILogger<JoinGameCommand> _logger;
+    private readonly IGrainFactory _grainFactory;
 
-    public class JoinGameCommandHandler : IRequestHandler<JoinGameCommand, GameState>
+    public JoinGameCommandHandler(
+        ILogger<JoinGameCommand> logger,
+        IGrainFactory grainFactory)
     {
-        private readonly ILogger<JoinGameCommand> _logger;
-        private readonly IGrainFactory _grainFactory;
+        _logger = logger;
+        _grainFactory = grainFactory;
+    }
 
-        public JoinGameCommandHandler(
-            ILogger<JoinGameCommand> logger,
-            IGrainFactory grainFactory)
+    public async Task<GameState> Handle(JoinGameCommand request, CancellationToken cancellationToken)
+    {
+        var player = _grainFactory.GetGrain<IPlayerGrain>(request.PlayerId);
+
+        var games = await player.GetActiveGames();
+        if(games.Contains(request.GameId))
         {
-            _logger = logger;
-            _grainFactory = grainFactory;
+            _logger.LogInformation("Already Joined");
+            return GameState.InPlay;
         }
 
-        public async Task<GameState> Handle(JoinGameCommand request, CancellationToken cancellationToken)
-        {
-            var player = _grainFactory.GetGrain<IPlayerGrain>(request.PlayerId);
-
-            var games = await player.GetActiveGames();
-            if(games.Contains(request.GameId))
-            {
-                _logger.LogInformation("Already Joined");
-                return GameState.InPlay;
-            }
-
-            return await player.JoinGame(request.GameId);
-        }
+        return await player.JoinGame(request.GameId);
     }
 }

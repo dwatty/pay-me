@@ -1,31 +1,33 @@
 using MediatR;
 using Orleans;
 using PayMe.Grains;
+using PayMe.Models;
 
-namespace PayMe.Commands
+namespace PayMe.Commands;
+
+public class EndTurnCommand : CommandQueryBase, IRequest 
+{ 
+    public List<List<Card>> Groups { get; set; } = new List<List<Card>>();
+}
+
+public class EndTurnCommandHandler : IRequestHandler<EndTurnCommand>
 {
-    public class EndTurnCommand : CommandQueryBase, IRequest { }
+    private readonly ILogger<EndTurnCommand> _logger;
+    private readonly IGrainFactory _grainFactory;
 
-    public class EndTurnCommandHandler : IRequestHandler<EndTurnCommand>
+    public EndTurnCommandHandler(
+        ILogger<EndTurnCommand> logger,
+        IGrainFactory grainFactory
+    )
     {
-        private readonly ILogger<EndTurnCommand> _logger;
-        private readonly IGrainFactory _grainFactory;
-
-        public EndTurnCommandHandler(
-            ILogger<EndTurnCommand> logger,
-            IGrainFactory grainFactory
-        )
-        {
-            _logger = logger;
-            _grainFactory = grainFactory;            
-        }
-
-        public async Task<Unit> Handle(EndTurnCommand request, CancellationToken cancellationToken)
-        {
-            var gameGrain = _grainFactory.GetGrain<IGameGrain>(request.GameId);
-            await gameGrain.EndTurn(request.PlayerId);
-            return Unit.Value;
-        }
+        _logger = logger;
+        _grainFactory = grainFactory;            
     }
 
+    public async Task<Unit> Handle(EndTurnCommand request, CancellationToken cancellationToken)
+    {
+        var gameGrain = _grainFactory.GetGrain<IGameGrain>(request.GameId);
+        await gameGrain.EndTurn(request.PlayerId, request.Groups, false);
+        return Unit.Value;
+    }
 }

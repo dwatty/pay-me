@@ -26,6 +26,8 @@ export class GameSummary {
     public roundState : RoundState = RoundState.Waiting;
 
     public playerTurnState : TurnState = TurnState.NotStarted;
+    
+    public scoreboard : any = {};
 
     
 
