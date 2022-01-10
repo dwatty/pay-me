@@ -1,4 +1,5 @@
 using System;
+using System.Dynamic;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -39,16 +40,16 @@ public class TestSiloConfigurations : ISiloConfigurator {
    
     public void Configure(ISiloBuilder siloBuilder)
     {
-        var mockClientProxy = new Mock<IClientProxy>();
+        var mockHub = new Mock<PayMe.Hubs.IGameHub>();
+        
+        var mockClients = new Mock<IHubClients<IGameHub>>();
+        mockClients.Setup(clients => clients.All).Returns(mockHub.Object);
 
-        var mockClients = new Mock<IHubClients>();
-        mockClients.Setup(clients => clients.All).Returns(mockClientProxy.Object);
-
-        var hub = new Mock<IHubContext<GameHub>>();
-        hub.Setup(x => x.Clients).Returns(() => mockClients.Object);
+        var mockHubContext = new Mock<IHubContext<GameHub, IGameHub>>();
+        mockHubContext.Setup(x => x.Clients).Returns(() => mockClients.Object);
 
         siloBuilder.ConfigureServices(service => {
-            service.AddSingleton<IHubContext<GameHub>>(hub.Object);
+            service.AddSingleton<IHubContext<GameHub, IGameHub>>(mockHubContext.Object);
             service.AddSingleton<IDeck, MockDeck>();
         });
     }

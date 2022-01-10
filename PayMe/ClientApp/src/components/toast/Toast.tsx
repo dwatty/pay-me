@@ -15,7 +15,6 @@ export const Toast = (props: IProps) => {
 
     useEffect(() => {
         setList([...toastList]);
-
         // eslint-disable-next-line
     }, [toastList]);
 

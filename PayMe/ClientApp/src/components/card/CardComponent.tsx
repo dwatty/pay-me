@@ -67,8 +67,20 @@ export const CardDisplay = (props: IDisplayProps) => {
 
 export const CardComponent = (props : IProps) => {
 
+    const getCardClass = useMemo(() => {
+        switch(props.suite) {
+            case Suites.Diamonds:
+            case Suites.Hearts:
+                return "card red";
+            case Suites.Spades:
+            case Suites.Clubs:
+            default:
+                return "card black";
+        }
+    }, [props.suite]);
+
     return (
-        <div onClick={props.click} className="card">
+        <div onClick={props.click} className={ getCardClass }>
             <CardDisplay suite={props.suite} value={props.value} />
             <CardDisplay suite={props.suite} value={props.value} />
         </div>

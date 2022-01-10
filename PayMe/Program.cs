@@ -2,7 +2,6 @@ using Orleans.Hosting;
 using System.Net;
 using MediatR;
 using PayMe.Hubs;
-using PayMe.Models;
 using PayMe.Infrastructure;
 
 await Host.CreateDefaultBuilder(args)

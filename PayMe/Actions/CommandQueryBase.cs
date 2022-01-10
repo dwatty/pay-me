@@ -1,9 +1,8 @@
-namespace PayMe.Commands
+namespace PayMe.Commands;
+
+public abstract class CommandQueryBase
 {
-    public abstract class CommandQueryBase
-    {
-        public Guid PlayerId { get; set; }
-        public Guid GameId { get; set; }
-        
-    }
+    public Guid PlayerId { get; set; }
+    public Guid GameId { get; set; }
+    
 }

@@ -16,7 +16,7 @@ import { AppActionType } from "../../context/app-reducer";
 export const NavMenu = () => {
 
     const { appState, appDispatch } = useAppContext();
-    const [collapsed, setCollapsed] = useState(false);
+    const [collapsed, setCollapsed] = useState(true);
 
     const toggleNavbar = () => {
         setCollapsed(!collapsed);
@@ -31,12 +31,12 @@ export const NavMenu = () => {
     return (
         <header>
             <Navbar
-                className="navbar-expand-sm navbar-toggleable-sm ng-white border-bottom box-shadow mb-3"
+                className="navbar-expand-sm navbar-toggleable-sm ng-white"
                 light
             >
-                <Container>
+                <Container fluid={true}>
                     <NavbarBrand tag={Link} to="/">
-                        Pay Me | Welcome { appState.username }
+                        Pay Me
                     </NavbarBrand>
                     <NavbarToggler onClick={toggleNavbar} className="mr-2" />
                     <Collapse
@@ -48,7 +48,15 @@ export const NavMenu = () => {
                             <NavItem>
                                 <NavLink
                                     tag={Link}
-                                    className="text-dark"
+                                    to="/"
+                                >
+                                    { appState.username }
+                                </NavLink>
+                            </NavItem>
+                            
+                            <NavItem>
+                                <NavLink
+                                    tag={Link}
                                     to="/"
                                 >
                                     Lobby
@@ -56,7 +64,6 @@ export const NavMenu = () => {
                             </NavItem>
                             <NavItem>
                                 <button
-                                    className="text-dark"
                                     onClick={quit}
                                 >
                                     Quit

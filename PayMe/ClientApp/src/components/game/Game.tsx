@@ -3,19 +3,29 @@ import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr";
 import { useParams } from "react-router-dom";
 import { GameService } from "../../service";
 import { GameSummary } from "../../models/game-summary";
-import { GameState, RoundState, Suites, TurnState } from "../../models/enums";
+import {
+    ClaimResult,
+    GameState,
+    RoundState,
+    Suites,
+    TurnState,
+} from "../../models/enums";
 import { CardComponent } from "../card/CardComponent";
 import { Card } from "../../models/card";
 import { CardBack } from "../card/CardBack";
 import { useAppContext } from "../../context/context";
 import { CardEmpty } from "../card/CardEmpty";
-import { TurnBadge } from "./TurnBadge";
 import { PlayerHand } from "./PlayerHand";
+import { Toast } from "../toast/Toast";
+import { GameBar } from "../gamebar/GameBar";
+import { Scoreboard } from "../scoreboard/Scoreboard";
+import { RoundOver } from "../round-over/RoundOver";
+import { GameWaiting } from "./GameWaiting";
 
 import "./Game.css";
-import { Toast } from "../toast/Toast";
 
 export const Game = () => {
+    
     const { appState } = useAppContext();
     const { gameId } = useParams() as any;
     const [service] = useState(new GameService());
@@ -32,13 +42,13 @@ export const Game = () => {
     const [hasSeenNext, setHasSeenNext] = useState(false);
     const [hasDiscarded, setHasDiscarded] = useState(false);
     const [handGroups, setHandGroups] = useState<Array<Card[]>>([]);
-    const [showNextRoundBtn, setShowNextRoundBtn] = useState(false);
-
+    const [scoring, setScoring] = useState<any>({});
+   
     async function getSummary() {
         const result = await service.getGameSummary(gameId);
         if (result) {
             setHandGroups([[...result.hand]]);
-
+            setScoring(result.scoreboard);
             setGame(result);
 
             switch (result.playerTurnState) {
@@ -141,17 +151,18 @@ export const Game = () => {
     // Round Won Event
     const onRoundWon = (winner: string) => {
         console.log("[GAME] :: Received RoundWon");
-        showToast('success', "Pay Me!", `${winner} has won this round.`);
+        showToast("success", "Pay Me!", `${winner} has won this round.`);
     };
 
     //
     // End Round Event
     const onEndRound = (gameResults: any) => {
         console.log("[GAME] :: Received EndRound");
-
+        
         const tmpGame = { ...gameRef.current } as GameSummary;
         tmpGame.roundState = RoundState.Finished;
         setGame(tmpGame);
+        setScoring(gameResults);
     };
 
     //
@@ -290,7 +301,7 @@ export const Game = () => {
     //      EndTurn is raised for all players to update their UI
     const endTurn = async () => {
         if (game.yourMove && hasSeenNext && hasDiscarded) {
-            await service.endTurn(gameId);
+            await service.endTurn(gameId, handGroups);
         }
     };
 
@@ -307,7 +318,14 @@ export const Game = () => {
     //      TODO
     const claimWin = async () => {
         if (game.yourMove && hasSeenNext && hasDiscarded) {
-            await service.claimWin(gameId, handGroups);
+            const claimResult = await service.claimWin(gameId, handGroups);
+            if (claimResult === ClaimResult.Invalid) {
+                showToast(
+                    "warning",
+                    "Sorry",
+                    "That doesn't look like a winning hand"
+                );
+            }
         }
     };
 
@@ -325,7 +343,7 @@ export const Game = () => {
             id: id,
             title: title,
             description: description,
-            backgroundColor: ""
+            backgroundColor: "",
         };
 
         switch (type) {
@@ -339,7 +357,7 @@ export const Game = () => {
                 toastProperties.backgroundColor = "#5bc0de";
                 break;
             case "warning":
-                toastProperties.backgroundColor = "#f0ad4e";
+                toastProperties.backgroundColor = "#ff9600";
                 break;
             default:
                 setToasts([]);
@@ -349,106 +367,78 @@ export const Game = () => {
     };
 
     return game && game.state === GameState.InPlay ? (
-        <>
-            {game.roundState === RoundState.Finished ? (
-                game.gameOwner === appState.playerId ? (
-                    <div className="next-round-available">
-                        <h1>
-                            Round Over! Click below to start the next round.
-                        </h1>
-                        <button onClick={startNextRound}>
-                            Start Next Round
-                        </button>
-                    </div>
-                ) : (
-                    <div className="next-round-available">
-                        <h1>Round Over!</h1>
-                    </div>
-                )
-            ) : null}
+        <div className="table-background">
+            
+            <RoundOver 
+                game={ game }
+                startNextRound={ startNextRound }
+            />
 
-            <div className="status-bar">
-                <div>
-                    Status:
-                    <span className={connected ? "connected" : "not-connected"}>
-                        {connected ? " Connected" : " Disconnected"}
-                    </span>
+            <div className="game-wrapper">
+                <div className="playing-surface">
+                    <div className="center-column">
+                        {game.yourMove && !hasSeenNext ? (
+                            <CardBack onClick={drawCard} />
+                        ) : (
+                            <CardBack />
+                        )}
+                    </div>
+
+                    <div className="center-column">
+                        {game.lastDiscard ? (
+                            <CardComponent
+                                key={"card-discarded"}
+                                suite={game.lastDiscard.suite}
+                                value={game.lastDiscard.value}
+                                click={drawDiscard}
+                            />
+                        ) : (
+                            <CardEmpty />
+                        )}
+                    </div>
                 </div>
-                <div>
-                    Turn:
-                    <span
-                        className={
-                            game.yourMove ? "connected" : "not-connected"
-                        }
+
+                <div className="my-cards-title">
+                    <h1>Your Cards</h1>
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        disabled={ !game.yourMove }
+                        onClick={() => {
+                            setHandGroups([...handGroups, []]);
+                        }}
                     >
-                        {game.yourMove
-                            ? " Your Turn"
-                            : " Waiting for Your Turn"}
-                    </span>
-                </div>
-            </div>
-
-            <div className="playing-surface">
-                <div className="center-column">
-                    <h1>Deck</h1>
-                    {game.yourMove && !hasSeenNext ? (
-                        <CardBack onClick={drawCard} />
-                    ) : (
-                        <CardBack />
-                    )}
+                        Create Group
+                    </button>
                 </div>
 
-                <div className="center-column">
-                    <h1>Discard</h1>
-                    {game.lastDiscard ? (
-                        <CardComponent
-                            key={"card-discarded"}
-                            suite={game.lastDiscard.suite}
-                            value={game.lastDiscard.value}
-                            click={drawDiscard}
-                        />
-                    ) : (
-                        <CardEmpty />
-                    )}
-                </div>
-            </div>
-
-            <div className="my-cards-title">
-                <h1>
-                    Your Cards <br />
-                    <TurnBadge
-                        hasDiscarded={hasDiscarded}
-                        hasSeenNext={hasSeenNext}
-                        isYourTurn={game.yourMove}
-                    />
-                </h1>
-                {hasDiscarded ? (
-                    <>
-                        <button onClick={claimWin}>Claim Win</button>
-                        <button onClick={endTurn}>End Turn</button>
-                    </>
-                ) : null}
-            </div>
-            <div className="my-cards">
                 <PlayerHand
                     hand={handGroups}
                     onNewGroupClick={onCreateGroup}
                     onCardClick={discard}
                 />
+
+                <GameBar
+                    hasDiscarded={hasDiscarded}
+                    hasSeenNext={hasSeenNext}
+                    connected={connected}
+                    isYourMove={game.yourMove}
+                    drawCard={drawCard}
+                    drawDiscard={drawDiscard}
+                    endTurn={endTurn}
+                    claimWin={claimWin}
+                />
+
+                <Toast
+                    toastList={toasts}
+                    position={"bottom-middle"}
+                    autoDelete={true}
+                    dismissTime={10000}
+                />
+
+                <Scoreboard scores={ scoring } />
+
             </div>
-
-            <button onClick={() => showToast('success', 'tst', 'test')}>HELLO</button>
-
-            <Toast
-                toastList={toasts}
-                position={"bottom-right"}
-                autoDelete={true}
-                dismissTime={10000}
-            />
-        </>
-    ) : (
-        <div className="waiting-screen">
-            <h1>Waiting on Another Player to Join!</h1>
         </div>
-    );
+    ) : <GameWaiting />;
 };

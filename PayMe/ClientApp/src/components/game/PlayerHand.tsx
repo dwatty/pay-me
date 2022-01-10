@@ -47,23 +47,20 @@ export const PlayerHand = (props: IProps) => {
 
     const grid = 8;
 
-    const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
-        // some basic styles to make the items look a bit nicer
+    const getItemStyle = (isDragging: boolean, draggableStyle: any, index: number) => ({
         userSelect: "none",
-        padding: grid * 2,
-        margin: `0 0 ${grid}px 0`,
-
-        // change background colour if dragging
-        background: isDragging ? "lightgreen" : "grey",
-
+        background: isDragging ? "lightgreen" : "transparent",
+        position: 'absolute',
+        top: '12px',
+        left: `${ index * 55 }px`,
         // styles we need to apply on draggables
         ...draggableStyle,
     });
 
     const getListStyle = (isDraggingOver: boolean) => ({
-        background: isDraggingOver ? "lightblue" : "lightgrey",
-        padding: grid,
-        width: 250,
+        background: isDraggingOver ? "#DDD" : "#EEE",
+        //padding: grid,
+        //width: 250,
     });
 
     function onDragEnd(result: any) {
@@ -92,20 +89,11 @@ export const PlayerHand = (props: IProps) => {
     }
 
     return (
-        <>
-            <button
-                type="button"
-                onClick={() => {
-                    setState([...state, []]);
-                }}
-            >
-                Create Group
-            </button>
-
+        <div className="my-cards">
             <DragDropContext onDragEnd={onDragEnd}>
             {
                 state.map((el, ind) => (
-                    <Droppable key={ind} droppableId={`${ind}`}>
+                    <Droppable key={ind} droppableId={`${ind}`} direction="horizontal">
                         {(provided, snapshot) => (
                             <div
                             className="wrapper"
@@ -119,6 +107,7 @@ export const PlayerHand = (props: IProps) => {
                                         key={item.id}
                                         draggableId={item.id}
                                         index={index}
+                                        
                                     >
                                     {
                                         (provided, snapshot) => (
@@ -130,7 +119,8 @@ export const PlayerHand = (props: IProps) => {
                                                 style={getItemStyle(
                                                     snapshot.isDragging,
                                                     provided.draggableProps
-                                                        .style
+                                                        .style,
+                                                    index
                                                 )}
                                             >                                            
                                                 <CardComponent
@@ -155,6 +145,6 @@ export const PlayerHand = (props: IProps) => {
                     </Droppable>
             ))}
             </DragDropContext>
-        </>
+        </div>
     );
 };
