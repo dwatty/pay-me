@@ -1,6 +1,8 @@
 using System.Collections.Generic;
-using PayMe.Infrastructure;
-using PayMe.Models;
+using PayMe.Shared.Infrastructure;
+using PayMe.Shared.Models;
+using PayMe.Shared.Enums;
+using PayMe.Shared;
 using Xunit;
 
 namespace PayMe.Tests;
@@ -15,12 +17,12 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(4, Enums.Suites.Clubs),
-            new Card(5, Enums.Suites.Clubs),
-            new Card(6, Enums.Suites.Clubs),
+            new Card(4, Suites.Clubs),
+            new Card(5, Suites.Clubs),
+            new Card(6, Suites.Clubs),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Threes);
         Assert.True(result);
     }
 
@@ -29,12 +31,12 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(Constants.ACE, Enums.Suites.Clubs),
-            new Card(3, Enums.Suites.Clubs),
-            new Card(Constants.QUEEN, Enums.Suites.Clubs),
+            new Card(Constants.ACE, Suites.Clubs),
+            new Card(3, Suites.Clubs),
+            new Card(Constants.QUEEN, Suites.Clubs),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Threes);
         Assert.True(result);
     }
 
@@ -43,12 +45,12 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(2, Enums.Suites.Clubs),
-            new Card(10, Enums.Suites.Clubs),
-            new Card(4, Enums.Suites.Clubs),
+            new Card(2, Suites.Clubs),
+            new Card(10, Suites.Clubs),
+            new Card(4, Suites.Clubs),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Tens);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Tens);
         Assert.True(result);
     }
 
@@ -57,12 +59,12 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(Constants.ACE, Enums.Suites.Clubs),
-            new Card(2, Enums.Suites.Clubs),
-            new Card(3, Enums.Suites.Clubs),
+            new Card(Constants.ACE, Suites.Clubs),
+            new Card(2, Suites.Clubs),
+            new Card(3, Suites.Clubs),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Threes);
         Assert.True(result);
     }
 
@@ -71,12 +73,12 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(Constants.ACE, Enums.Suites.Clubs),
-            new Card(3, Enums.Suites.Clubs),
-            new Card(Constants.KING, Enums.Suites.Clubs),
+            new Card(Constants.ACE, Suites.Clubs),
+            new Card(3, Suites.Clubs),
+            new Card(Constants.KING, Suites.Clubs),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Threes);
         Assert.True(result);
     }
 
@@ -85,12 +87,12 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(4, Enums.Suites.Clubs),
-            new Card(5, Enums.Suites.Clubs),
-            new Card(6, Enums.Suites.Hearts),
+            new Card(4, Suites.Clubs),
+            new Card(5, Suites.Clubs),
+            new Card(6, Suites.Hearts),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Threes);
         Assert.False(result);
     }
 
@@ -99,12 +101,12 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(10, Enums.Suites.Clubs),
-            new Card(11, Enums.Suites.Clubs),
-            new Card(3, Enums.Suites.Clubs),
+            new Card(10, Suites.Clubs),
+            new Card(11, Suites.Clubs),
+            new Card(3, Suites.Clubs),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Threes);
         Assert.True(result);
     }
 
@@ -113,12 +115,12 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(10, Enums.Suites.Clubs),
-            new Card(11, Enums.Suites.Clubs),
-            new Card(0, Enums.Suites.Jokers),
+            new Card(10, Suites.Clubs),
+            new Card(11, Suites.Clubs),
+            new Card(0, Suites.Jokers),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Threes);
         Assert.True(result);
     }
 
@@ -127,12 +129,12 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(10, Enums.Suites.Clubs),
-            new Card(11, Enums.Suites.Diamonds),
-            new Card(0, Enums.Suites.Jokers),
+            new Card(10, Suites.Clubs),
+            new Card(11, Suites.Diamonds),
+            new Card(0, Suites.Jokers),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Threes);
         Assert.False(result);
     }
 
@@ -141,12 +143,12 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(10, Enums.Suites.Clubs),
-            new Card(11, Enums.Suites.Hearts),
-            new Card(3, Enums.Suites.Clubs),
+            new Card(10, Suites.Clubs),
+            new Card(11, Suites.Hearts),
+            new Card(3, Suites.Clubs),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Threes);
         Assert.False(result);
     }
    
@@ -155,12 +157,12 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(10, Enums.Suites.Clubs),
-            new Card(11, Enums.Suites.Hearts),
-            new Card(7, Enums.Suites.Clubs),
+            new Card(10, Suites.Clubs),
+            new Card(11, Suites.Hearts),
+            new Card(7, Suites.Clubs),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Sevens);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Sevens);
         Assert.False(result);
     }
 
@@ -173,13 +175,13 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(Constants.JACK, Enums.Suites.Clubs),
-            new Card(Constants.QUEEN, Enums.Suites.Clubs),
-            new Card(Constants.KING, Enums.Suites.Clubs),
-            new Card(Constants.ACE, Enums.Suites.Clubs),
+            new Card(Constants.JACK, Suites.Clubs),
+            new Card(Constants.QUEEN, Suites.Clubs),
+            new Card(Constants.KING, Suites.Clubs),
+            new Card(Constants.ACE, Suites.Clubs),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Fours);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Fours);
         Assert.True(result);
     }
 
@@ -188,13 +190,13 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(Constants.JACK, Enums.Suites.Clubs),
-            new Card(Constants.QUEEN, Enums.Suites.Clubs),
-            new Card(Constants.KING, Enums.Suites.Clubs),
-            new Card(Constants.ACE, Enums.Suites.Clubs),
+            new Card(Constants.JACK, Suites.Clubs),
+            new Card(Constants.QUEEN, Suites.Clubs),
+            new Card(Constants.KING, Suites.Clubs),
+            new Card(Constants.ACE, Suites.Clubs),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Aces);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Aces);
         Assert.True(result);
     }
 
@@ -203,13 +205,13 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(Constants.ACE, Enums.Suites.Hearts),
-            new Card(2, Enums.Suites.Hearts),
-            new Card(3, Enums.Suites.Hearts),
-            new Card(4, Enums.Suites.Hearts),
+            new Card(Constants.ACE, Suites.Hearts),
+            new Card(2, Suites.Hearts),
+            new Card(3, Suites.Hearts),
+            new Card(4, Suites.Hearts),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Sevens);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Sevens);
         Assert.True(result);
     }
 
@@ -220,13 +222,13 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(2, Enums.Suites.Hearts),
-            new Card(9, Enums.Suites.Diamonds),
-            new Card(5, Enums.Suites.Hearts),
-            new Card(9, Enums.Suites.Spades),
+            new Card(2, Suites.Hearts),
+            new Card(9, Suites.Diamonds),
+            new Card(5, Suites.Hearts),
+            new Card(9, Suites.Spades),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Nines);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Nines);
         Assert.True(result);
     }
 
@@ -235,13 +237,13 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(Constants.ACE, Enums.Suites.Hearts),
-            new Card(2, Enums.Suites.Hearts),
-            new Card(3, Enums.Suites.Hearts),
-            new Card(4, Enums.Suites.Hearts),
+            new Card(Constants.ACE, Suites.Hearts),
+            new Card(2, Suites.Hearts),
+            new Card(3, Suites.Hearts),
+            new Card(4, Suites.Hearts),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Fours);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Fours);
         Assert.True(result);
     }
 
@@ -251,13 +253,13 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(Constants.ACE, Enums.Suites.Hearts),
-            new Card(10, Enums.Suites.Hearts),
-            new Card(3, Enums.Suites.Hearts),
-            new Card(4, Enums.Suites.Hearts),
+            new Card(Constants.ACE, Suites.Hearts),
+            new Card(10, Suites.Hearts),
+            new Card(3, Suites.Hearts),
+            new Card(4, Suites.Hearts),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Tens);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Tens);
         Assert.True(result);
     }
 
@@ -268,14 +270,14 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(10, Enums.Suites.Hearts),
-            new Card(10, Enums.Suites.Diamonds),
-            new Card(4, Enums.Suites.Hearts),
-            new Card(Constants.ACE, Enums.Suites.Hearts),
-            new Card(5, Enums.Suites.Hearts),
+            new Card(10, Suites.Hearts),
+            new Card(10, Suites.Diamonds),
+            new Card(4, Suites.Hearts),
+            new Card(Constants.ACE, Suites.Hearts),
+            new Card(5, Suites.Hearts),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Tens);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Tens);
         Assert.True(result);
     }
 
@@ -288,14 +290,14 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(12, Enums.Suites.Clubs),
-            new Card(5, Enums.Suites.Diamonds),
-            new Card(5, Enums.Suites.Clubs),
-            new Card(11, Enums.Suites.Clubs),
-            new Card(10, Enums.Suites.Clubs)
+            new Card(12, Suites.Clubs),
+            new Card(5, Suites.Diamonds),
+            new Card(5, Suites.Clubs),
+            new Card(11, Suites.Clubs),
+            new Card(10, Suites.Clubs)
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Fives);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Fives);
         Assert.True(result);
     }
 
@@ -304,14 +306,14 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(12, Enums.Suites.Clubs),
-            new Card(5, Enums.Suites.Diamonds),
-            new Card(5, Enums.Suites.Clubs),
-            new Card(11, Enums.Suites.Spades),
-            new Card(10, Enums.Suites.Clubs)
+            new Card(12, Suites.Clubs),
+            new Card(5, Suites.Diamonds),
+            new Card(5, Suites.Clubs),
+            new Card(11, Suites.Spades),
+            new Card(10, Suites.Clubs)
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Fives);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Fives);
         Assert.False(result);
     }
 
@@ -322,14 +324,14 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(2, Enums.Suites.Hearts),
-            new Card(9, Enums.Suites.Diamonds),
-            new Card(5, Enums.Suites.Hearts),
-            new Card(9, Enums.Suites.Spades),
-            new Card(9, Enums.Suites.Hearts),
+            new Card(2, Suites.Hearts),
+            new Card(9, Suites.Diamonds),
+            new Card(5, Suites.Hearts),
+            new Card(9, Suites.Spades),
+            new Card(9, Suites.Hearts),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Nines);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Nines);
         Assert.True(result);
     }    
 
@@ -340,14 +342,14 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(2, Enums.Suites.Hearts),
-            new Card(9, Enums.Suites.Diamonds),
-            new Card(10, Enums.Suites.Hearts),
-            new Card(9, Enums.Suites.Spades),
-            new Card(9, Enums.Suites.Hearts),
+            new Card(2, Suites.Hearts),
+            new Card(9, Suites.Diamonds),
+            new Card(10, Suites.Hearts),
+            new Card(9, Suites.Spades),
+            new Card(9, Suites.Hearts),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Nines);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Nines);
         Assert.False(result);
     }        
 
@@ -356,14 +358,14 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(3, Enums.Suites.Diamonds),
-            new Card(3, Enums.Suites.Clubs),
-            new Card(10, Enums.Suites.Clubs),
-            new Card(11, Enums.Suites.Clubs),
-            new Card(12, Enums.Suites.Clubs)                
+            new Card(3, Suites.Diamonds),
+            new Card(3, Suites.Clubs),
+            new Card(10, Suites.Clubs),
+            new Card(11, Suites.Clubs),
+            new Card(12, Suites.Clubs)                
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Threes);
         Assert.False(result);
     }
 
@@ -372,14 +374,14 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(10, Enums.Suites.Clubs),
-            new Card(Constants.JOKER, Enums.Suites.Jokers),
-            new Card(2, Enums.Suites.Diamonds),
-            new Card(4, Enums.Suites.Diamonds),
-            new Card(6, Enums.Suites.Diamonds)
+            new Card(10, Suites.Clubs),
+            new Card(Constants.JOKER, Suites.Jokers),
+            new Card(2, Suites.Diamonds),
+            new Card(4, Suites.Diamonds),
+            new Card(6, Suites.Diamonds)
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Tens);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Tens);
         Assert.True(result);
     }    
 
@@ -392,16 +394,16 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(5, Enums.Suites.Clubs),
-            new Card(6, Enums.Suites.Clubs),
-            new Card(7, Enums.Suites.Clubs),
-            new Card(8, Enums.Suites.Clubs),
-            new Card(9, Enums.Suites.Clubs),
-            new Card(10, Enums.Suites.Clubs),
-            new Card(11, Enums.Suites.Clubs)
+            new Card(5, Suites.Clubs),
+            new Card(6, Suites.Clubs),
+            new Card(7, Suites.Clubs),
+            new Card(8, Suites.Clubs),
+            new Card(9, Suites.Clubs),
+            new Card(10, Suites.Clubs),
+            new Card(11, Suites.Clubs)
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Sevens);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Sevens);
         Assert.True(result);
     }
 
@@ -411,16 +413,16 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(5, Enums.Suites.Clubs),
-            new Card(6, Enums.Suites.Clubs),
-            new Card(7, Enums.Suites.Diamonds),
-            new Card(8, Enums.Suites.Clubs),
-            new Card(9, Enums.Suites.Clubs),
-            new Card(10, Enums.Suites.Clubs),
-            new Card(11, Enums.Suites.Clubs)
+            new Card(5, Suites.Clubs),
+            new Card(6, Suites.Clubs),
+            new Card(7, Suites.Diamonds),
+            new Card(8, Suites.Clubs),
+            new Card(9, Suites.Clubs),
+            new Card(10, Suites.Clubs),
+            new Card(11, Suites.Clubs)
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Sevens);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Sevens);
         Assert.True(result);
     }
 
@@ -430,16 +432,16 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(5, Enums.Suites.Clubs),
-            new Card(8, Enums.Suites.Clubs),
-            new Card(9, Enums.Suites.Clubs),
-            new Card(10, Enums.Suites.Clubs),
-            new Card(11, Enums.Suites.Clubs),
-            new Card(7, Enums.Suites.Diamonds),
-            new Card(0, Enums.Suites.Jokers),
+            new Card(5, Suites.Clubs),
+            new Card(8, Suites.Clubs),
+            new Card(9, Suites.Clubs),
+            new Card(10, Suites.Clubs),
+            new Card(11, Suites.Clubs),
+            new Card(7, Suites.Diamonds),
+            new Card(0, Suites.Jokers),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Sevens);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Sevens);
         Assert.True(result);
     }
 
@@ -448,16 +450,16 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(5, Enums.Suites.Clubs),
-            new Card(8, Enums.Suites.Diamonds),
-            new Card(9, Enums.Suites.Clubs),
-            new Card(10, Enums.Suites.Clubs),
-            new Card(11, Enums.Suites.Clubs),
-            new Card(7, Enums.Suites.Diamonds),
-            new Card(0, Enums.Suites.Jokers),
+            new Card(5, Suites.Clubs),
+            new Card(8, Suites.Diamonds),
+            new Card(9, Suites.Clubs),
+            new Card(10, Suites.Clubs),
+            new Card(11, Suites.Clubs),
+            new Card(7, Suites.Diamonds),
+            new Card(0, Suites.Jokers),
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Sevens);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Sevens);
         Assert.False(result);
     }
 
@@ -470,22 +472,22 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(2, Enums.Suites.Clubs),
-            new Card(3, Enums.Suites.Clubs),
-            new Card(4, Enums.Suites.Clubs),
-            new Card(5, Enums.Suites.Clubs),
-            new Card(6, Enums.Suites.Clubs),
-            new Card(7, Enums.Suites.Clubs),
-            new Card(8, Enums.Suites.Clubs),
-            new Card(9, Enums.Suites.Clubs),
-            new Card(10, Enums.Suites.Clubs),
-            new Card(11, Enums.Suites.Clubs),
-            new Card(12, Enums.Suites.Clubs),
-            new Card(13, Enums.Suites.Clubs),
-            new Card(14, Enums.Suites.Clubs)
+            new Card(2, Suites.Clubs),
+            new Card(3, Suites.Clubs),
+            new Card(4, Suites.Clubs),
+            new Card(5, Suites.Clubs),
+            new Card(6, Suites.Clubs),
+            new Card(7, Suites.Clubs),
+            new Card(8, Suites.Clubs),
+            new Card(9, Suites.Clubs),
+            new Card(10, Suites.Clubs),
+            new Card(11, Suites.Clubs),
+            new Card(12, Suites.Clubs),
+            new Card(13, Suites.Clubs),
+            new Card(14, Suites.Clubs)
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Aces);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Aces);
         Assert.True(result);
     }
 
@@ -498,19 +500,19 @@ public class SingleGroupRunTests
     {
         var hand = new List<Card>
         {
-            new Card(2, Enums.Suites.Clubs),
-            new Card(4, Enums.Suites.Clubs),
-            new Card(5, Enums.Suites.Clubs),
-            new Card(6, Enums.Suites.Clubs),
-            new Card(7, Enums.Suites.Clubs),
-            new Card(8, Enums.Suites.Clubs),
-            new Card(9, Enums.Suites.Clubs),
-            new Card(10, Enums.Suites.Clubs),
-            new Card(11, Enums.Suites.Clubs),
-            new Card(12, Enums.Suites.Clubs)
+            new Card(2, Suites.Clubs),
+            new Card(4, Suites.Clubs),
+            new Card(5, Suites.Clubs),
+            new Card(6, Suites.Clubs),
+            new Card(7, Suites.Clubs),
+            new Card(8, Suites.Clubs),
+            new Card(9, Suites.Clubs),
+            new Card(10, Suites.Clubs),
+            new Card(11, Suites.Clubs),
+            new Card(12, Suites.Clubs)
         };
 
-        var result = ValidityEngine.AssertRun(hand, Enums.GameRound.Aces);
+        var result = ValidityEngine.AssertRun(hand, GameRound.Aces);
         Assert.False(result);
     }
 

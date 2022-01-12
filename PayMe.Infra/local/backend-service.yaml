@@ -1,0 +1,19 @@
+# 
+#  Type: Service
+#  What: PayMe Backend Service
+#  Why: Accept routed traffic from FE to the BE
+#
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: paymeapp
+spec:
+  selector:
+    app: paymeapp
+    tier: backend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: http
+...

@@ -1,20 +1,49 @@
 # Pay Me
 
+A card game to play around with the Orleans framework.  The client is written in React and the backend is in C# using the Orleans framework.
+
+## Tech Stack
+* Orleans
+* WebAPI
+* React
+* SignalR
+* xUnit
+
+# High Level Overview
+A user set's their name which creates a player grain in Orleans.
+
+Once in the lobby, the player can create a game which is also represented by a grain in Orleans.
+
+A second player can join that game, at which point the game is considered to be started and the back and forth beings.
+
+A user draws/discards cards from the deck or the discard pile, they can claim a win for the round and end a turn.  All of those actions are done with API requests.  The server will broadcast SignalR messages to the connected clients to keep state in sync across sessions.
+
+## Docker
+
+### PayMe.Client
+Regular localized development can be done via
+```
+npm start
+```
+
+The app can be deployed to a container, with the src directory mounted to a volume and then development can be done in the conatiner.  The can be running the docker-compose file:
+```
+docker-compose -f docker-compose.yaml up
+```
 
 
-# High Level Flow
 
-A player clicks create game
-* `CreateGame` is called on `GameController`
-* That uses `CreateGameCommand`
-* That will use `PlayerGrain` to called `CreateGame`
-* That will make a new `GameGrain` and add itself to that game
-* The user navigates to the `Game.tsx` page, connects to SignalR and waits
+### PayMe.Server
+The server's Dockerfile is built from the root level script `server-build` which will also deploy the app + redis to your local k8s environment.
+```
+./server-build.sh
+```
 
+After it's deployed, you can see the dashboard by doing the following: 
+```
+dashboard start
+kubectl proxy
+```
 
-A player clicks join on existing game
-* `GameController` `Join` takes a Game ID
-* That uses `JoinGameCommand`
-* That will call `JoinGame` on the `PlayerGrain`
-* `JoinGame` will get the `GameGrain` and add the new player to it
-* This time, `JoinGame` will see 2 players and publish a message to SignalR to start the game
+Visit and paste in the token
+* http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/workloads?namespace=default

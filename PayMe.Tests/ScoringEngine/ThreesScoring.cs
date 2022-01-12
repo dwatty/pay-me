@@ -1,6 +1,8 @@
 using System.Collections.Generic;
-using PayMe.Infrastructure;
-using PayMe.Models;
+using PayMe.Shared.Infrastructure;
+using PayMe.Shared.Models;
+using PayMe.Shared.Enums;
+using PayMe.Shared;
 using Xunit;
 
 namespace PayMe.Tests;
@@ -14,14 +16,14 @@ public class ThreesScoringTests
         {
             new List<Card>
             {
-                new Card(4, Enums.Suites.Hearts),
-                new Card(4, Enums.Suites.Diamonds),
-                new Card(4, Enums.Suites.Spades),
+                new Card(4, Suites.Hearts),
+                new Card(4, Suites.Diamonds),
+                new Card(4, Suites.Spades),
             }
         };
 
-        var result = ValidityEngine.ValidateHand(hand, Enums.GameRound.Threes);
-        var points = ScoringEngine.ScoreHand(result, Enums.GameRound.Threes);
+        var result = ValidityEngine.ValidateHand(hand, GameRound.Threes);
+        var points = ScoringEngine.ScoreHand(result, GameRound.Threes);
 
         Assert.True(result.AllSetsValid());
         Assert.Equal(0, points);
@@ -34,14 +36,14 @@ public class ThreesScoringTests
         {
             new List<Card>
             {
-                new Card(4, Enums.Suites.Hearts),
-                new Card(6, Enums.Suites.Diamonds),
-                new Card(7, Enums.Suites.Spades),
+                new Card(4, Suites.Hearts),
+                new Card(6, Suites.Diamonds),
+                new Card(7, Suites.Spades),
             }
         };
 
-        var result = ValidityEngine.ValidateHand(hand, Enums.GameRound.Threes);
-        var points = ScoringEngine.ScoreHand(result, Enums.GameRound.Threes);
+        var result = ValidityEngine.ValidateHand(hand, GameRound.Threes);
+        var points = ScoringEngine.ScoreHand(result, GameRound.Threes);
 
         Assert.False(result.AllSetsValid());
         Assert.Equal(15, points);
@@ -54,14 +56,14 @@ public class ThreesScoringTests
         {
             new List<Card>
             {
-                new Card(10, Enums.Suites.Hearts),
-                new Card(Constants.QUEEN, Enums.Suites.Diamonds),
-                new Card(Constants.KING, Enums.Suites.Spades),
+                new Card(10, Suites.Hearts),
+                new Card(Constants.QUEEN, Suites.Diamonds),
+                new Card(Constants.KING, Suites.Spades),
             }
         };
 
-        var result = ValidityEngine.ValidateHand(hand, Enums.GameRound.Threes);
-        var points = ScoringEngine.ScoreHand(result, Enums.GameRound.Threes);
+        var result = ValidityEngine.ValidateHand(hand, GameRound.Threes);
+        var points = ScoringEngine.ScoreHand(result, GameRound.Threes);
 
         Assert.False(result.AllSetsValid());
         Assert.Equal(30, points);
@@ -74,14 +76,14 @@ public class ThreesScoringTests
         {
             new List<Card>
             {
-                new Card(10, Enums.Suites.Hearts),
-                new Card(Constants.QUEEN, Enums.Suites.Diamonds),
-                new Card(3, Enums.Suites.Spades),
+                new Card(10, Suites.Hearts),
+                new Card(Constants.QUEEN, Suites.Diamonds),
+                new Card(3, Suites.Spades),
             }
         };
 
-        var result = ValidityEngine.ValidateHand(hand, Enums.GameRound.Threes);
-        var points = ScoringEngine.ScoreHand(result, Enums.GameRound.Threes);
+        var result = ValidityEngine.ValidateHand(hand, GameRound.Threes);
+        var points = ScoringEngine.ScoreHand(result, GameRound.Threes);
 
         Assert.False(result.AllSetsValid());
         Assert.Equal(35, points);
@@ -94,14 +96,14 @@ public class ThreesScoringTests
         {
             new List<Card>
             {
-                new Card(5, Enums.Suites.Hearts),
-                new Card(Constants.QUEEN, Enums.Suites.Diamonds),
-                new Card(Constants.JOKER, Enums.Suites.Jokers),
+                new Card(5, Suites.Hearts),
+                new Card(Constants.QUEEN, Suites.Diamonds),
+                new Card(Constants.JOKER, Suites.Jokers),
             }
         };
 
-        var result = ValidityEngine.ValidateHand(hand, Enums.GameRound.Threes);
-        var points = ScoringEngine.ScoreHand(result, Enums.GameRound.Threes);
+        var result = ValidityEngine.ValidateHand(hand, GameRound.Threes);
+        var points = ScoringEngine.ScoreHand(result, GameRound.Threes);
 
         Assert.False(result.AllSetsValid());
         Assert.Equal(30, points);

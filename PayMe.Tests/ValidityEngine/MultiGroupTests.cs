@@ -1,6 +1,7 @@
 using System.Collections.Generic;
-using PayMe.Infrastructure;
-using PayMe.Models;
+using PayMe.Shared.Infrastructure;
+using PayMe.Shared.Models;
+using PayMe.Shared.Enums;
 using Xunit;
 
 namespace PayMe.Tests;
@@ -14,19 +15,19 @@ public class MultiGroupTests
         {
             new List<Card>
             {
-                new Card(11, Enums.Suites.Hearts),
-                new Card(11, Enums.Suites.Diamonds),
-                new Card(11, Enums.Suites.Spades),
+                new Card(11, Suites.Hearts),
+                new Card(11, Suites.Diamonds),
+                new Card(11, Suites.Spades),
             },
             new List<Card>
             {
-                new Card(3, Enums.Suites.Clubs),
-                new Card(3, Enums.Suites.Hearts),
-                new Card(3, Enums.Suites.Spades),
+                new Card(3, Suites.Clubs),
+                new Card(3, Suites.Hearts),
+                new Card(3, Suites.Spades),
             }
         };
 
-        var result = ValidityEngine.ValidateHand(hand, Enums.GameRound.Sixes);
+        var result = ValidityEngine.ValidateHand(hand, GameRound.Sixes);
         Assert.True(result.AllSetsValid());
     }
 
@@ -37,19 +38,19 @@ public class MultiGroupTests
         {
             new List<Card>
             {
-                new Card(11, Enums.Suites.Hearts),
-                new Card(11, Enums.Suites.Diamonds),
-                new Card(11, Enums.Suites.Spades),
+                new Card(11, Suites.Hearts),
+                new Card(11, Suites.Diamonds),
+                new Card(11, Suites.Spades),
             },
             new List<Card>
             {
-                new Card(3, Enums.Suites.Clubs),
-                new Card(3, Enums.Suites.Hearts),
-                new Card(3, Enums.Suites.Spades),
+                new Card(3, Suites.Clubs),
+                new Card(3, Suites.Hearts),
+                new Card(3, Suites.Spades),
             }
         };
 
-        var result = ValidityEngine.ValidateHand(hand, Enums.GameRound.Nines);
+        var result = ValidityEngine.ValidateHand(hand, GameRound.Nines);
         Assert.True(result.IsInvalidCollection);
     }
 
@@ -60,25 +61,25 @@ public class MultiGroupTests
         {
             new List<Card>
             {
-                new Card(11, Enums.Suites.Hearts),
-                new Card(11, Enums.Suites.Diamonds),
-                new Card(11, Enums.Suites.Spades),
+                new Card(11, Suites.Hearts),
+                new Card(11, Suites.Diamonds),
+                new Card(11, Suites.Spades),
             },
             new List<Card>
             {
-                new Card(3, Enums.Suites.Hearts),
-                new Card(4, Enums.Suites.Hearts),
-                new Card(5, Enums.Suites.Hearts),
+                new Card(3, Suites.Hearts),
+                new Card(4, Suites.Hearts),
+                new Card(5, Suites.Hearts),
             },
             new List<Card>
             {
-                new Card(11, Enums.Suites.Hearts),
-                new Card(12, Enums.Suites.Hearts),
-                new Card(13, Enums.Suites.Hearts),
+                new Card(11, Suites.Hearts),
+                new Card(12, Suites.Hearts),
+                new Card(13, Suites.Hearts),
             }
         };
 
-        var result = ValidityEngine.ValidateHand(hand, Enums.GameRound.Nines);
+        var result = ValidityEngine.ValidateHand(hand, GameRound.Nines);
         Assert.True(result.AllSetsValid());
     }    
 
@@ -90,25 +91,25 @@ public class MultiGroupTests
         {
             new List<Card>
             {
-                new Card(11, Enums.Suites.Hearts),
-                new Card(11, Enums.Suites.Diamonds),
-                new Card(11, Enums.Suites.Spades),
+                new Card(11, Suites.Hearts),
+                new Card(11, Suites.Diamonds),
+                new Card(11, Suites.Spades),
             },
             new List<Card>
             {
-                new Card(9, Enums.Suites.Hearts),
-                new Card(9, Enums.Suites.Diamonds),
-                new Card(9, Enums.Suites.Spades),
+                new Card(9, Suites.Hearts),
+                new Card(9, Suites.Diamonds),
+                new Card(9, Suites.Spades),
             },
             new List<Card>
             {
-                new Card(2, Enums.Suites.Hearts),
-                new Card(3, Enums.Suites.Hearts),
-                new Card(4, Enums.Suites.Hearts),
+                new Card(2, Suites.Hearts),
+                new Card(3, Suites.Hearts),
+                new Card(4, Suites.Hearts),
             }
         };
 
-        var result = ValidityEngine.ValidateHand(hand, Enums.GameRound.Nines);
+        var result = ValidityEngine.ValidateHand(hand, GameRound.Nines);
         Assert.True(result.AllSetsValid());
     }    
 

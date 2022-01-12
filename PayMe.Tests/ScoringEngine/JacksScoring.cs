@@ -1,6 +1,8 @@
 using System.Collections.Generic;
-using PayMe.Infrastructure;
-using PayMe.Models;
+using PayMe.Shared.Infrastructure;
+using PayMe.Shared.Models;
+using PayMe.Shared.Enums;
+using PayMe.Shared;
 using Xunit;
 
 namespace PayMe.Tests;
@@ -14,28 +16,28 @@ public class JacksScoringTests
         {
             new List<Card>
             {
-                new Card(5, Enums.Suites.Diamonds),
-                new Card(6, Enums.Suites.Diamonds),
-                new Card(7, Enums.Suites.Diamonds),
-                new Card(8, Enums.Suites.Diamonds)
+                new Card(5, Suites.Diamonds),
+                new Card(6, Suites.Diamonds),
+                new Card(7, Suites.Diamonds),
+                new Card(8, Suites.Diamonds)
             },
             new List<Card>
             {
-                new Card(3, Enums.Suites.Hearts),
-                new Card(3, Enums.Suites.Diamonds),
-                new Card(Constants.JACK, Enums.Suites.Spades)
+                new Card(3, Suites.Hearts),
+                new Card(3, Suites.Diamonds),
+                new Card(Constants.JACK, Suites.Spades)
             },
             new List<Card>
             {
-                new Card(Constants.ACE, Enums.Suites.Spades),
-                new Card(2, Enums.Suites.Spades),
-                new Card(3, Enums.Suites.Spades),
-                new Card(4, Enums.Suites.Spades)
+                new Card(Constants.ACE, Suites.Spades),
+                new Card(2, Suites.Spades),
+                new Card(3, Suites.Spades),
+                new Card(4, Suites.Spades)
             }
         };
 
-        var result = ValidityEngine.ValidateHand(hand, Enums.GameRound.Jacks);
-        var points = ScoringEngine.ScoreHand(result, Enums.GameRound.Jacks);
+        var result = ValidityEngine.ValidateHand(hand, GameRound.Jacks);
+        var points = ScoringEngine.ScoreHand(result, GameRound.Jacks);
 
         Assert.True(result.AllSetsValid());
         Assert.Equal(0, points);
@@ -49,25 +51,25 @@ public class JacksScoringTests
         {
             new List<Card>
             {
-                new Card(5, Enums.Suites.Diamonds),
-                new Card(6, Enums.Suites.Diamonds),
-                new Card(7, Enums.Suites.Diamonds),
-                new Card(8, Enums.Suites.Diamonds)
+                new Card(5, Suites.Diamonds),
+                new Card(6, Suites.Diamonds),
+                new Card(7, Suites.Diamonds),
+                new Card(8, Suites.Diamonds)
             },
             new List<Card>
             {
-                new Card(3, Enums.Suites.Hearts),
-                new Card(3, Enums.Suites.Diamonds),
-                new Card(Constants.QUEEN, Enums.Suites.Clubs),
-                new Card(Constants.ACE, Enums.Suites.Spades),
-                new Card(2, Enums.Suites.Spades),
-                new Card(3, Enums.Suites.Hearts),
-                new Card(4, Enums.Suites.Spades)
+                new Card(3, Suites.Hearts),
+                new Card(3, Suites.Diamonds),
+                new Card(Constants.QUEEN, Suites.Clubs),
+                new Card(Constants.ACE, Suites.Spades),
+                new Card(2, Suites.Spades),
+                new Card(3, Suites.Hearts),
+                new Card(4, Suites.Spades)
             }
         };
 
-        var result = ValidityEngine.ValidateHand(hand, Enums.GameRound.Jacks);
-        var points = ScoringEngine.ScoreHand(result, Enums.GameRound.Jacks);
+        var result = ValidityEngine.ValidateHand(hand, GameRound.Jacks);
+        var points = ScoringEngine.ScoreHand(result, GameRound.Jacks);
 
         Assert.False(result.AllSetsValid());
         Assert.Equal(50, points);
