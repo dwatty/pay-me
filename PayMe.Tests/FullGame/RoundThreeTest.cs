@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Moq;
 using Orleans.TestingHost;
-using PayMe.Enums;
-using PayMe.Grains;
-using PayMe.Infrastructure;
-using PayMe.Models;
+using PayMe.Shared.Enums;
+using PayMe.Shared.Interfaces;
+using PayMe.Shared.Models;
 using Xunit;
 
 namespace PayMe.Tests;
@@ -40,7 +38,7 @@ public class E2E_RoundThreeTest
         Assert.Equal(GameState.InPlay, gameState);
 
         // 3.  Check for 3 cards in our hand
-        var summary = await gameGrain.GetSummary(player1);
+        var summary = await gameGrain.GetPlayerSummary(player1);
         Assert.Equal(3, summary.Hand.Count);
 
         // 4.  Draw a card
@@ -50,17 +48,17 @@ public class E2E_RoundThreeTest
 
         // 5. Discard our pulled card
         await gameGrain.DiscardCard(player1, drawnCard.Suite, drawnCard.Value);
-        
+
         // 6. Claim a win
-        summary = await gameGrain.GetSummary(player1);
+        summary = await gameGrain.GetPlayerSummary(player1);
         var hands = new List<List<Card>>()
         {
             summary.Hand
         };
 
-        var  claimResult = await gameGrain.ClaimWin(player1, hands);
+        var claimResult = await gameGrain.ClaimWin(player1, hands);
         Assert.Equal(ClaimResult.Valid, claimResult);
-        
+
     }
 
 }

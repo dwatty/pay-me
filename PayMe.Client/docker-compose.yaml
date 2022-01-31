@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  web:
+    container_name: payme-dev
+    image: payme-dev
+    build:
+      context: .
+      target: development
+    volumes:
+      - ./src:/app/src
+      - /app/node_modules
+    ports:
+      - 3000:3000

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
-using PayMe.Infrastructure;
-using PayMe.Models;
+using PayMe.Shared.Infrastructure;
+using PayMe.Shared.Models;
+using PayMe.Shared.Enums;
 using Xunit;
 
 namespace PayMe.Tests;
@@ -12,12 +13,12 @@ public class SingleGroupAlikeTests
     {
         var hand = new List<Card>
         {
-            new Card(3, Enums.Suites.Clubs),
-            new Card(3, Enums.Suites.Hearts),
-            new Card(3, Enums.Suites.Spades),
+            new Card(3, Suites.Clubs),
+            new Card(3, Suites.Hearts),
+            new Card(3, Suites.Spades),
         };
 
-        var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertMatchingFaces(hand, GameRound.Threes);
         Assert.True(result);
     }
 
@@ -26,12 +27,12 @@ public class SingleGroupAlikeTests
     {
         var hand = new List<Card>
         {
-            new Card(2, Enums.Suites.Clubs),
-            new Card(2, Enums.Suites.Hearts),
-            new Card(2, Enums.Suites.Spades),
+            new Card(2, Suites.Clubs),
+            new Card(2, Suites.Hearts),
+            new Card(2, Suites.Spades),
         };
 
-        var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertMatchingFaces(hand, GameRound.Threes);
         Assert.True(result);
     }
 
@@ -40,12 +41,12 @@ public class SingleGroupAlikeTests
     {
         var hand = new List<Card>
         {
-            new Card(4, Enums.Suites.Clubs),
-            new Card(4, Enums.Suites.Hearts),
-            new Card(4, Enums.Suites.Spades),
+            new Card(4, Suites.Clubs),
+            new Card(4, Suites.Hearts),
+            new Card(4, Suites.Spades),
         };
 
-        var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Nines);
+        var result = ValidityEngine.AssertMatchingFaces(hand, GameRound.Nines);
         Assert.True(result);
     }
 
@@ -54,12 +55,12 @@ public class SingleGroupAlikeTests
     {
         var hand = new List<Card>
         {
-            new Card(12, Enums.Suites.Clubs),
-            new Card(12, Enums.Suites.Hearts),
-            new Card(0, Enums.Suites.Jokers),
+            new Card(12, Suites.Clubs),
+            new Card(12, Suites.Hearts),
+            new Card(0, Suites.Jokers),
         };
 
-        var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertMatchingFaces(hand, GameRound.Threes);
         Assert.True(result);
     }
 
@@ -68,12 +69,12 @@ public class SingleGroupAlikeTests
     {
         var hand = new List<Card>
         {
-            new Card(12, Enums.Suites.Clubs),
-            new Card(12, Enums.Suites.Hearts),
-            new Card(0, Enums.Suites.Jokers),
+            new Card(12, Suites.Clubs),
+            new Card(12, Suites.Hearts),
+            new Card(0, Suites.Jokers),
         };
 
-        var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertMatchingFaces(hand, GameRound.Threes);
         Assert.True(result);
     }
 
@@ -82,12 +83,12 @@ public class SingleGroupAlikeTests
     {
         var hand = new List<Card>
         {
-            new Card(3, Enums.Suites.Clubs),
-            new Card(4, Enums.Suites.Hearts),
-            new Card(3, Enums.Suites.Spades),
+            new Card(3, Suites.Clubs),
+            new Card(4, Suites.Hearts),
+            new Card(3, Suites.Spades),
         };
 
-        var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertMatchingFaces(hand, GameRound.Threes);
         Assert.True(result);
     }
 
@@ -96,12 +97,12 @@ public class SingleGroupAlikeTests
     {
         var hand = new List<Card>
         {
-            new Card(6, Enums.Suites.Clubs),
-            new Card(6, Enums.Suites.Hearts),
-            new Card(3, Enums.Suites.Spades),
+            new Card(6, Suites.Clubs),
+            new Card(6, Suites.Hearts),
+            new Card(3, Suites.Spades),
         };
 
-        var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertMatchingFaces(hand, GameRound.Threes);
         Assert.True(result);
     }
 
@@ -110,12 +111,12 @@ public class SingleGroupAlikeTests
     {
         var hand = new List<Card>
         {
-            new Card(6, Enums.Suites.Clubs),
-            new Card(10, Enums.Suites.Hearts),
-            new Card(3, Enums.Suites.Spades),
+            new Card(6, Suites.Clubs),
+            new Card(10, Suites.Hearts),
+            new Card(3, Suites.Spades),
         };
 
-        var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertMatchingFaces(hand, GameRound.Threes);
         Assert.False(result);
     }
     
@@ -124,12 +125,12 @@ public class SingleGroupAlikeTests
     {
         var hand = new List<Card>
         {
-            new Card(6, Enums.Suites.Clubs),
-            new Card(4, Enums.Suites.Hearts),
-            new Card(3, Enums.Suites.Spades),
+            new Card(6, Suites.Clubs),
+            new Card(4, Suites.Hearts),
+            new Card(3, Suites.Spades),
         };
 
-        var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertMatchingFaces(hand, GameRound.Threes);
         Assert.False(result);
     }
 
@@ -138,12 +139,12 @@ public class SingleGroupAlikeTests
     {
         var hand = new List<Card>
         {
-            new Card(6, Enums.Suites.Clubs),
-            new Card(4, Enums.Suites.Hearts),
-            new Card(0, Enums.Suites.Jokers),
+            new Card(6, Suites.Clubs),
+            new Card(4, Suites.Hearts),
+            new Card(0, Suites.Jokers),
         };
 
-        var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertMatchingFaces(hand, GameRound.Threes);
         Assert.False(result);
     }
 
@@ -152,12 +153,12 @@ public class SingleGroupAlikeTests
     {
         var hand = new List<Card>
         {
-            new Card(12, Enums.Suites.Clubs),
-            new Card(3, Enums.Suites.Hearts),
-            new Card(0, Enums.Suites.Jokers),
+            new Card(12, Suites.Clubs),
+            new Card(3, Suites.Hearts),
+            new Card(0, Suites.Jokers),
         };
 
-        var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Threes);
+        var result = ValidityEngine.AssertMatchingFaces(hand, GameRound.Threes);
         Assert.True(result);
     }
 
@@ -167,14 +168,14 @@ public class SingleGroupAlikeTests
     {
         var hand = new List<Card>
         {
-            new Card(10, Enums.Suites.Clubs),
-            new Card(0, Enums.Suites.Jokers),
-            new Card(0, Enums.Suites.Jokers),
-            new Card(5, Enums.Suites.Hearts),
-            new Card(5, Enums.Suites.Clubs),
+            new Card(10, Suites.Clubs),
+            new Card(0, Suites.Jokers),
+            new Card(0, Suites.Jokers),
+            new Card(5, Suites.Hearts),
+            new Card(5, Suites.Clubs),
         };
 
-        var result = ValidityEngine.AssertMatchingFaces(hand, Enums.GameRound.Fives);
+        var result = ValidityEngine.AssertMatchingFaces(hand, GameRound.Fives);
         Assert.True(result);
     }
 

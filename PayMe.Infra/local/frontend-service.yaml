@@ -1,0 +1,20 @@
+# 
+#  Type: Service
+#  What: PayMe Frontend Service
+#  Why: Route traffic from our SPA to the backend deployment
+#
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+spec:
+  selector:
+    app: paymeapp
+    tier: frontend
+  type: NodePort
+  ports:
+  - protocol: "TCP"
+    port: 80
+    targetPort: 80
+...
