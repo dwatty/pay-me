@@ -49,3 +49,7 @@
     text-shadow: 5px 5px 4px darkgreen;
     margin-top: 1rem;
 }
+
+.error {
+    color: red;
+}

@@ -17,9 +17,30 @@ export interface ClearUser {
 
 export type AppActions = SetUser | ClearUser;
 
-export const initialAppState : AppState = localStorage.getItem('appdata') 
-    ? JSON.parse(localStorage.getItem('appdata')!)
-    : { username : ''};
+/**
+ * Check in local storage for our saved state.  Do a basic
+ * check that we have a playerID of GUID length.  If we don't
+ * just remove the data to avoid a weird state
+ * @returns A JSON object with our local storage state
+ */
+function getSavedState() {
+    const savedData = localStorage.getItem('appdata');
+    try {
+        if(savedData) {
+            const jsonData = JSON.parse(savedData!);
+            if(jsonData && jsonData.playerId && jsonData.playerId.length === 36) {
+                return jsonData;
+            }
+            else {
+                localStorage.removeItem('appdata');
+            }
+        }
+    }
+    catch(err) { }   
+    return { username : ''};
+}
+
+export const initialAppState : AppState = getSavedState();
 
 export function appReducer(state: AppState, action: AppActions) {
     let newState;
