@@ -100,8 +100,11 @@ export class GameService {
             headers = { ...headers, ...headerOverrides };
         }
 
-        // const reqUrl = `http://localhost:5152/game/${ url }`;
-        const reqUrl = `/game/${ url }`;
+        const nenv = process.env.NODE_ENV;
+        const reqUrl = nenv === "development"
+            ? `http://localhost:5152/game/${ url }`
+            : `/game/${ url }`;
+            
         return fetch(reqUrl, {
             method: method,
             headers: headers,
@@ -110,7 +113,12 @@ export class GameService {
             body: obj ? JSON.stringify(obj) : null
         })
         .then(res => { 
-            return res.text() 
+            if(res.status > 200) {
+                return `{"error":"${res.status}","message":"${res.statusText}","failure":true}`;
+            }
+            else {
+                return res.text() 
+            }
         })
         .then(res => { 
             return res ? JSON.parse(res) : {} 

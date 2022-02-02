@@ -53,11 +53,20 @@ await Host.CreateDefaultBuilder(args)
 
 public class Startup
 {
-    public void ConfigureServices(IServiceCollection services)
+    public Startup(IConfiguration configuration)
     {
-        var redisConnectionString = $"{Environment.GetEnvironmentVariable("REDIS")}:6379";
+        Configuration = configuration;
+    }
 
-        services.AddSignalR(hubOptions => 
+    public IConfiguration Configuration { get; }
+
+    public void ConfigureServices(IServiceCollection services)
+    {        
+        var useBackplane = Configuration.GetValue<bool>("SignalR:UseBackplane");
+        if(useBackplane) 
+        {
+            var redisConnectionString = $"{Environment.GetEnvironmentVariable("REDIS")}:6379";
+            services.AddSignalR(hubOptions => 
             {
                 hubOptions.EnableDetailedErrors = true;
             })
@@ -94,8 +103,15 @@ public class Startup
 
                         return connection;
                     };
-
             });
+        }
+        else
+        {
+            services.AddSignalR(hubOptions => 
+            {
+                hubOptions.EnableDetailedErrors = true;
+            });
+        }
             
         services.AddCors(options =>
         {

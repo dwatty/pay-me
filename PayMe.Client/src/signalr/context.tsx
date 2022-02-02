@@ -16,9 +16,14 @@ export function SignalRWrapper({ children } : any) {
     const [isConnected, setIsConnected] = useState(false);
     const [note, setNote] = useState('yar');
     const [connection, setConnection] = useState<HubConnection>(() => {
+
+        const nenv = process.env.NODE_ENV;
+        const reqUrl = nenv === "development"
+            ? `http://localhost:5152/hubs/gamehub`
+            : `/hubs/gamehub`;
+
         return new HubConnectionBuilder()
-            //.withUrl("http://localhost:5152/hubs/gamehub")
-            .withUrl("/hubs/gamehub", {
+            .withUrl(reqUrl, {
                 skipNegotiation: true,
                 transport: HttpTransportType.WebSockets        
             })
