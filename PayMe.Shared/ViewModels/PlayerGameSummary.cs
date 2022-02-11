@@ -17,5 +17,13 @@ public class PlayerGameSummary
     public Dictionary<GameRound, List<RoundResult>> Scoreboard { get; set; }= new Dictionary<GameRound, List<RoundResult>>();
     public List<Card> Hand { get; set; } = new List<Card>();
     public bool YourMove { get; set; }
+
+    public List<Player> Players { get; set; } = new List<Player>();
     
+}
+
+public class Player
+{
+    public Guid PlayerId { get; set; }
+    public string PlayerName { get; set; } = "";
 }

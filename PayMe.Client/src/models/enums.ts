@@ -46,3 +46,19 @@ export enum ClaimResult {
     Valid = 0,
     Invalid
 }
+
+export enum GameEvents {
+    Unknown = 0,
+    GameStarted,
+    PlayerAdded,
+    RoundOver,
+    ScoreResult,
+    DrawCard,
+    DrawDiscard,
+    Discard,
+    ClaimWin,
+    ClaimFail,
+    GetSumamry,
+    SetName,
+    HandDealt
+}

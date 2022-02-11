@@ -1,9 +1,12 @@
 import { SetUserAction } from "../models/set-user-action";
+import { AddToastAction, ToastMessage } from "../models/toast-message";
 import { AppState } from "./context-types";
 
 export enum AppActionType {
     SetUser,
-    ClearUser    
+    ClearUser,
+    AddToast,
+    RemoveToast
 }
 
 export interface SetUser {
@@ -15,7 +18,17 @@ export interface ClearUser {
     type: AppActionType.ClearUser
 }
 
-export type AppActions = SetUser | ClearUser;
+export interface AddToast {
+    type: AppActionType.AddToast;
+    payload: AddToastAction;
+}
+
+export interface RemoveToast {
+    type: AppActionType.RemoveToast;
+    payload: number;
+}
+
+export type AppActions = SetUser | ClearUser | AddToast | RemoveToast;
 
 /**
  * Check in local storage for our saved state.  Do a basic
@@ -37,7 +50,7 @@ function getSavedState() {
         }
     }
     catch(err) { }   
-    return { username : ''};
+    return { username : '', toasts: []};
 }
 
 export const initialAppState : AppState = getSavedState();
@@ -57,6 +70,28 @@ export function appReducer(state: AppState, action: AppActions) {
                 ...state, 
                 username: '', 
                 playerId: '' 
+            };
+            break;
+        case AppActionType.AddToast:
+            const id = Math.floor(Math.random() * 101 + 1);
+            const toast = {
+                ...action.payload,
+                id: id
+            };            
+
+            newState = {
+                ...state,
+                toasts: [...state.toasts, toast]
+            }
+            break;
+        case AppActionType.RemoveToast:
+            const toastCpy = [...state.toasts];
+            const itemIndex = toastCpy.findIndex(e => e.id === action.payload);
+            toastCpy.splice(itemIndex, 1);
+            
+            newState = {
+                ...state,
+                toasts: toastCpy
             };
             break;
         default:

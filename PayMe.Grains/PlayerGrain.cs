@@ -38,6 +38,11 @@ public class PlayerGrain : Grain, IPlayerGrain
     // create a new game, and add oursleves to that game
     public async Task<Guid> CreateGame()
     {
+        if(String.IsNullOrWhiteSpace(_player.State.Username))
+        {
+            return Guid.Empty;
+        }
+
         _player.State.GamesStarted += 1;
 
         var gameId = Guid.NewGuid();
@@ -104,7 +109,7 @@ public class PlayerGrain : Grain, IPlayerGrain
         foreach (var gameId in _player.State.ActiveGames)
         {
             var game = GrainFactory.GetGrain<IGameGrain>(gameId);
-            tasks.Add(game.GetSummary(this.GetPrimaryKey()));
+            tasks.Add(game.GetSummary());
         }
 
         await Task.WhenAll(tasks);

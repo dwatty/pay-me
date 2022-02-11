@@ -29,6 +29,7 @@ export class GameSummary {
     
     public scoreboard : any = {};
 
+    public players : Player[] = [];
     
 
     // TBD
@@ -36,4 +37,9 @@ export class GameSummary {
     public numMoves: number = 0;
     public outcome: number = 0;
     public usernames: string[] = [];
+}
+
+export class Player {
+    public playerId: string = "";
+    public playerName: string = "";
 }

@@ -47,3 +47,13 @@ kubectl proxy
 
 Visit and paste in the token
 * http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/workloads?namespace=default
+
+
+
+Local Dev
+
+cd PayMe.Server
+dotnet run
+
+cd PayMe.Client
+npm start

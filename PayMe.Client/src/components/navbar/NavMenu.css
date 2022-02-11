@@ -4,14 +4,14 @@
   word-break: break-all;
 }
 
+a.navbar-brand:hover {
+    color: white;
+}
+
 html {
   font-size: 14px;
 }
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
+
 
 .box-shadow {
   box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
@@ -32,6 +32,10 @@ nav {
     line-height: 3rem;
 }
 
+.navbar-light .navbar-brand:hover, .navbar-light .navbar-brand:focus {
+    color: white;
+}
+
 .navbar-light .navbar-toggler {
     border-color: white;
     background-color: white;
@@ -48,7 +52,9 @@ nav {
 }
 
 .navbar-nav li.nav-item button:hover,
-.navbar-nav li.nav-item a:hover {
+.navbar-nav li.nav-item a:hover,
+.navbar-nav li.nav-item button:focus,
+.navbar-nav li.nav-item a:focus {
     color: #CCC !important;
 }
 
@@ -64,8 +70,24 @@ nav {
     color: white;
 }
 
-.appnav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.navbar-toggler {
+    float: right;
+}
+
+.navbar-collapse {
+    float: right;
+}
+
+
+@media (min-width: 768px) {
+    html {
+      font-size: 16px;
+    }
+  }
+
+@media (max-width: 576px) {
+    .navbar-collapse {
+        float: left;
+        clear: both;
+    }
 }

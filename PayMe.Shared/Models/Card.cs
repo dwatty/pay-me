@@ -14,6 +14,11 @@ public class Card
         this.Value = Value;
         this.Suite = Suite;
     }
+
+    public override string ToString()
+    {
+        return $"{this.Value} of {this.Suite.ToString()}";
+    }
 }
 
 public class WildCard : Card
