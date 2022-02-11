@@ -2,6 +2,7 @@ namespace PayMe.Shared.Enums;
 
 public enum Suites
 {
+    Unknown = -1,
     Hearts = 0,
     Diamonds,
     Clubs,
@@ -27,12 +28,21 @@ public enum GameOutcome
 }
 
 [Serializable]
-public enum GameAction
+public enum GameEvents
 {
-    PickDiscard = 0,
+    Unknown = 0,
+    GameStarted,
+    PlayerAdded,
+    RoundOver,
+    ScoreResult,
     DrawCard,
+    DrawDiscard,
     Discard,
-    GoOut
+    ClaimWin,
+    ClaimFail,
+    GetSumamry,
+    SetName,
+    HandDealt
 }
 
 [Serializable]

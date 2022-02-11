@@ -15,6 +15,7 @@ interface IProps {
     hand: Array<Card[]>;
     onCardClick: any;
     onNewGroupClick: any;
+    onDragEnd: any;
 }
 
 export const PlayerHand = (props: IProps) => {
@@ -84,7 +85,11 @@ export const PlayerHand = (props: IProps) => {
             newState[sInd] = result[sInd];
             newState[dInd] = result[dInd];
 
-            setState(newState.filter((group) => group.length));
+            const newList = newState.filter((group) => group.length);
+            setState(newList);
+            
+            props.onDragEnd(newList);
+
         }
     }
 

@@ -42,7 +42,7 @@ export const Start = () => {
         <div className="table-background">
             <h1 className="app-title">Pay<br/>Me</h1>
             <div className="start-container">
-                <div className="row">
+                <div className="row mt-5">
                     <div className="col">
                         <h2>Enter your name below to get started.</h2>
                     </div>

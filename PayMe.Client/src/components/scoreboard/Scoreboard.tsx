@@ -1,43 +1,70 @@
 import { useMemo, useState } from "react";
 import { RoundResult } from "../../models/round-result";
+import { TableButton } from "../shared/TableButton";
+import { Player } from '../../models/game-summary';
 import "./Scoreboard.css";
 
 interface IProps {
     scores: any;
+    players: Player[];
+}
+
+type RoundScore = {
+    score: number;
+    won: boolean;
 }
 
 type PlayerResult = {
     playerName: string;
     playerId: string;
-    scores: [];
+    scores: RoundScore[];
     total: number;
 };
 
 export const Scoreboard = (props: IProps) => {
     const [showScoreboard, setShowScoreboard] = useState<boolean>(false);
+
     const trueModel = useMemo(() => {
         const players: PlayerResult[] = [];
 
+        props.players.forEach((player : Player) => {
+
+            const i = {
+                playerName: player.playerName,
+                playerId: player.playerId,
+                scores: [
+                    { score: 0, won: false }, 
+                    { score: 0, won: false },
+                    { score: 0, won: false },
+                    { score: 0, won: false },
+                    { score: 0, won: false },
+                    { score: 0, won: false },
+                    { score: 0, won: false },
+                    { score: 0, won: false },
+                    { score: 0, won: false },
+                    { score: 0, won: false },
+                    { score: 0, won: false },
+                    { score: 0, won: false }
+                ],
+                total: 0
+            } as PlayerResult;
+
+            players.push(i);
+
+        });
+
         if (props.scores && "Threes" in props.scores) {
-            props.scores["Threes"].forEach((itm: any) => {
-                const i = {
-                    playerName: itm.playerName,
-                    playerId: itm.playerId,
-                    scores: [],
-                } as PlayerResult;
-
-                players.push(i);
-            });
-
-            Object.keys(props.scores).forEach((key: any) => {
+            Object.keys(props.scores).forEach((key: any, idx: number) => {
+                
                 const rResults = props.scores[key] as RoundResult[];
                 rResults.forEach((itm: RoundResult) => {
+
                     players.forEach((player: any) => {
                         if (player.playerId === itm.playerId) {
-                            player.scores.push({
+                            player.scores[idx] = {
                                 score: itm.score,
                                 won: itm.wonRound,
-                            });
+                            };
                         }
                     });
                 });
@@ -90,67 +117,66 @@ export const Scoreboard = (props: IProps) => {
                         <h1>Scoreboard</h1>
                         <button
                             className="scoreboard-close"
-                            onClick={() => setShowScoreboard(false)}
-                        >
+                            onClick={() => setShowScoreboard(false)}>
                             X
                         </button>
                     </div>
                 </div>
-                {
-                    trueModel.length > 0 
-                    ? (
-                        <div className="row">
-                            <div className="col">
-                                <table className="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Player</th>
-                                            {trueModel[0].scores.map(
-                                                (hItm: any, hIdx: number) => (
-                                                    <th key={`th-${hIdx}`}>
-                                                        {getRoundName(hIdx)}
-                                                    </th>
-                                                )
-                                            )}
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {trueModel.map(
-                                            (itm: PlayerResult, idx: number) => (
-                                                <tr
-                                                    key={`${itm.playerId}-score-round-row`}
-                                                >
-                                                    <td>{itm.playerName}</td>
-                                                    {itm.scores.map(
-                                                        (sItm: any, idx: number) => (
-                                                            <td
-                                                                key={`${itm.playerId}-score-round-${idx}`}
-                                                            >
-                                                                {sItm.score}
-                                                                {sItm.won ? "*" : ""}
-                                                            </td>
-                                                        )
-                                                    )}
-                                                    <td>{itm.total}</td>
-                                                </tr>
+                <div className="row">
+                    <div className="col">
+                        <table className="scores">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>3</th>
+                                    <th>4</th>
+                                    <th>5</th>
+                                    <th>6</th>
+                                    <th>7</th>
+                                    <th>8</th>
+                                    <th>9</th>
+                                    <th>10</th>
+                                    <th>J</th>
+                                    <th>Q</th>
+                                    <th>K</th>
+                                    <th>A</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>                                
+                            {
+                                trueModel.map((itm: PlayerResult) => (
+                                    <tr key={`${itm.playerId}-score-round-row`}>
+                                        <td data-label="Player">{itm.playerName}</td>
+                                        {
+                                            itm.scores.map((sItm: any, idx: number) => (
+                                                <td
+                                                    className={sItm.won ? "payme" : ""}
+                                                    data-label={getRoundName(idx)}
+                                                    key={`${itm.playerId}-score-round-${idx}`}>
+                                                    {sItm.score}
+                                                    {sItm.won ? <span className="payme">*</span> : null}
+                                                </td>
                                             )
                                         )}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    )
-                    : <p>No Rounds Completed Yet</p>
-                }
+                                        <td data-label="Total">{itm.total}</td>
+                                    </tr>
+                                    )
+                                )
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     ) : (
-        <button
-            className="btn scoreboard-btn"
+        <TableButton
+            top="1.5rem"
+            right="1.5rem"
             onClick={() => setShowScoreboard(!showScoreboard)}
         >
             Score
-        </button>
+        </TableButton>
     );
 };

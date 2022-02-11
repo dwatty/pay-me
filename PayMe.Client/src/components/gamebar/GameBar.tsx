@@ -17,7 +17,7 @@ export const GameBar = (props: IProps) => {
         <div className="game-bar">
 
             <div className="gamebar-status">
-                <span className={props.connected ? "status-dot connected" : "status-dot not-connected"} />
+                <span className={props.isYourMove ? "status-dot connected" : "status-dot not-connected"} />
                 
                 <TurnBadge
                     hasDiscarded={props.hasDiscarded}

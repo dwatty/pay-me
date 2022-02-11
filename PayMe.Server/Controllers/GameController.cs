@@ -16,16 +16,19 @@ public class GameController : ControllerBase
     private readonly ISender _mediator;
     private readonly IGrainFactory _grainFactory;
 
-    //
-    // Ctor
+    /// <summary>
+    /// Constructor
+    /// </summary>
     public GameController(IGrainFactory grainFactory, ISender mediator)
     {
         _grainFactory = grainFactory;
         _mediator = mediator;
     }
 
-    //
-    // Set the user's name for their session
+    /// <summary>
+    /// Set username
+    /// </summary>
+    /// <param name="username">The username for the player</param>
     [HttpPost("setname")]
     public async Task<ActionResult<Guid>> SetUser([FromBody] string username)
     {
@@ -38,8 +41,9 @@ public class GameController : ControllerBase
         return await _mediator.Send(cmd);
     }
 
-    //
-    // Get the list of games in the system
+    /// <summary>
+    /// Get the list of games in the system
+    /// </summary>
     [HttpGet]
     [Route("info")]
     public async Task<ActionResult<GetGamesQueryResponse>> GetGames()
@@ -48,8 +52,9 @@ public class GameController : ControllerBase
         return await _mediator.Send(cmd);
     }
 
-    //
-    // Create a new game as the current user
+    /// <summary>
+    /// Create a new game as the current user
+    /// </summary>
     [HttpPost("create")]
     public async Task<ActionResult<Guid>> CreateGame()
     {
@@ -57,8 +62,9 @@ public class GameController : ControllerBase
         return await _mediator.Send(cmd);
     }
 
-    // 
-    // Get the current user to join the provided game ID
+    /// <summary>
+    /// Get the current user to join the provided game ID
+    /// </summary>
     [HttpPut("join")]
     public async Task<ActionResult<GameState>> Join()
     {
@@ -71,8 +77,9 @@ public class GameController : ControllerBase
         return await _mediator.Send(cmd);
     }
 
-    //
-    // Get the summary of the game for initializing client state
+    /// <summary>
+    /// Get the summary of the game for initializing client state
+    /// </summary>
     [HttpGet("summary")]
     public async Task<PlayerGameSummary> GetGameSummary()
     {
@@ -85,8 +92,9 @@ public class GameController : ControllerBase
         return await _mediator.Send(cmd);
     }
 
-    //
-    // Draw the next card as part of a player's turn
+    /// <summary>
+    /// Draw the next card as part of a player's turn
+    /// </summary>
     [HttpPost("drawcard")]
     public async Task<Card> DrawCard()
     {
@@ -99,8 +107,9 @@ public class GameController : ControllerBase
         return await _mediator.Send(cmd);
     }
 
-    //
-    // Take the current discard as part of a player's turn
+    /// <summary>
+    /// Take the current discard as part of a player's turn
+    /// </summary>
     [HttpPost("drawdiscard")]
     public async Task<object> DrawDiscard()
     {
@@ -113,8 +122,9 @@ public class GameController : ControllerBase
         return await _mediator.Send(cmd);
     }
 
-    //
-    // Take the current discard as part of a player's turn
+    /// <summary>
+    /// Take the current discard as part of a player's turn
+    /// </summary>
     [HttpPut("discard")]
     public async Task Discard(DiscardCardCommand request)
     {            
@@ -123,9 +133,9 @@ public class GameController : ControllerBase
         await _mediator.Send(request);
     }
 
-
-    //
-    // Claim a win
+    /// <summary>
+    /// Claim a win
+    /// </summary>
     [HttpPut("claimwin")]
     public async Task<ClaimResult> ClaimWin([FromBody]List<List<Card>> handGroups)
     {
@@ -139,8 +149,9 @@ public class GameController : ControllerBase
         return await _mediator.Send(cmd);
     }
 
-    //
-    // End the player's turn
+    /// <summary>
+    /// GEnd the player's turn
+    /// </summary>
     [HttpPut("endturn")]
     public async Task EndTurn([FromBody]List<List<Card>> handGroups)
     {
@@ -154,6 +165,9 @@ public class GameController : ControllerBase
         await _mediator.Send(cmd);
     }
 
+    /// <summary>
+    /// Start the next round
+    /// </summary>
     [HttpPut("nextround")]
     public async Task StartNextRound()
     {
@@ -164,6 +178,21 @@ public class GameController : ControllerBase
         };
 
         await _mediator.Send(cmd);
+    }
+
+    /// <summary>
+    /// Get the game history
+    /// </summary>
+    [HttpGet("history")]
+    public async Task<GameHistoryQueryResponse> GetGameHistory()
+    {
+        var cmd = new GetGameHistoryQuery()
+        {
+            PlayerId = this.GetPlayerId(),
+            GameId = this.GetGameId()
+        };
+
+        return await _mediator.Send(cmd);
     }
 
 }

@@ -64,6 +64,10 @@ export class GameService {
         return this.makeGameRequest('nextround', gameId, "PUT");
     }
 
+    public async getHistory(gameId: string) {
+        return this.makeGameRequest('history', gameId, 'GET');
+    }
+
     //
     // Used for making game specific requests, will pass the game ID
     // as a header in the request

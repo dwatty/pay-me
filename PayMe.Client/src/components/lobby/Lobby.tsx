@@ -6,13 +6,26 @@ import { PairingSummary } from "../../models/pairing-summary";
 import { GameService } from "../../service";
 import { useSignalR } from "../../signalr/context";
 import { NavMenu } from "../navbar/NavMenu";
+import { ContentWrap } from "../shared/ContentWrap";
+import styled from "styled-components";
 import "./Lobby.css";
+import { AppActionType } from "../../context/app-reducer";
+
+const NoGames = styled.h1`
+    background-color: #eee;
+    text-align: center;
+    padding: 1rem;
+    border-radius: 4px;
+    border: 1px solid #999;
+    margin-top: 15px;
+    font-weight: lighter;
+    font-size: 1.8rem;
+`;
 
 export const Lobby = () => {
-
     const signalR = useSignalR();
     const history = useNavigate();
-    const { appState } = useAppContext();
+    const { appState, appDispatch } = useAppContext();
     const [service] = useState(new GameService(appState.playerId));
     const [games, setGames] = useState<GameSummary[]>([]);
     const [availables, setAvailables] = useState<PairingSummary[]>([]);
@@ -24,11 +37,11 @@ export const Lobby = () => {
     }
 
     useEffect(() => {
-        if(signalR.isConnected) {
-            signalR.connection!.on('GameCreated', () => {
+        if (signalR.isConnected) {
+            signalR.connection!.on("GameCreated", () => {
                 init();
-            })
-        }     
+            });
+        }
     }, [signalR.isConnected]);
 
     useEffect(() => {
@@ -37,8 +50,37 @@ export const Lobby = () => {
 
     const createGame = async () => {
         const gameId = await service.createGame();
-        if(gameId) {
+        if (gameId === '00000000-0000-0000-0000-000000000000') {
+
+            // This scenario is typically that the backend as restarted
+            // Logout and clear state
+            appDispatch({
+                type: AppActionType.AddToast,
+                payload: {
+                    title: 'Error',
+                    type: 'error',
+                    description: 'Please sign-in again.'
+                }
+            });
+            
+            appDispatch({
+                type: AppActionType.ClearUser,
+            });
+
+            
+        }
+        else if (gameId) {
             history(`/play/${gameId}`);
+        }
+        else {
+            appDispatch({
+                type: AppActionType.AddToast,
+                payload: {
+                    title: 'Error',
+                    type: 'error',
+                    description: 'Could not create game!  Please try again later.'
+                }
+            });
         }
     };
 
@@ -50,10 +92,10 @@ export const Lobby = () => {
     return (
         <>
             <NavMenu />
-            <div className="lobby-container">
+            <ContentWrap>
                 <div className="row mb-3">
                     <div className="col d-flex justify-content-between">
-                        <h1 className="mb-0">Game Lobby</h1>
+                        <h1 className="mb-0">Lobby</h1>
                         <button className="btn btn-light" onClick={createGame}>
                             + Create New Game
                         </button>
@@ -62,7 +104,8 @@ export const Lobby = () => {
 
                 <div className="row mb-3">
                     <div className="col">
-                        <h2>Your Games</h2>
+                        <h2>Active Games</h2>
+                        <p>Here's all the games you've previously joined that aren't finished yet!</p>
                         {games.length > 0 ? (
                             <table className="table table-striped">
                                 <thead>
@@ -94,15 +137,18 @@ export const Lobby = () => {
                                                 >
                                                     Join
                                                 </button>
+                                                <a className="btn btn-light" href={`/history/${itm.gameId}`}>
+                                                    Events
+                                                </a>
                                             </td>
                                         </tr>
                                     ))}
                                 </tbody>
                             </table>
                         ) : (
-                            <h1 className="no-games">
-                                You haven't created any games yet!
-                            </h1>
+                            <NoGames>
+                                You haven't joined any games!<br/>What are you waiting for?<br/>👏
+                            </NoGames>
                         )}
                     </div>
                 </div>
@@ -110,6 +156,7 @@ export const Lobby = () => {
                 <div className="row">
                     <div className="col">
                         <h2>Available Games</h2>
+                        <p>Looking for a game?  Join one of these!</p>
                         {availables.length > 0 ? (
                             <table className="table table-striped">
                                 <thead>
@@ -140,13 +187,11 @@ export const Lobby = () => {
                                 </tbody>
                             </table>
                         ) : (
-                            <h1 className="no-games-available">
-                                There aren't any games available.
-                            </h1>
+                            <NoGames>There aren't any games available.<br/>Maybe you should start one?<br/>❓</NoGames>
                         )}
                     </div>
                 </div>
-            </div>
+            </ContentWrap>
         </>
     );
 };

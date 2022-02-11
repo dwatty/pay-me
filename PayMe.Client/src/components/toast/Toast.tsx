@@ -1,27 +1,19 @@
 import { useEffect, useState } from 'react';
+import { AppActionType } from '../../context/app-reducer';
+import { useAppContext } from '../../context/context';
 import './Toast.css';
 
-interface IProps {
-    toastList: any[],
-    position: string,
-    autoDelete: boolean,
-    dismissTime: number
-}
+export const Toasts = () => {
 
-export const Toast = (props: IProps) => {
-    const { toastList, position, autoDelete, dismissTime } = props;
+    const autoDelete = true;
+    const dismissTime = 7500;
+    const position = "bottom-middle";
+    const { appState, appDispatch } = useAppContext();
     
-    const [list, setList] = useState(toastList);
-
-    useEffect(() => {
-        setList([...toastList]);
-        // eslint-disable-next-line
-    }, [toastList]);
-
     useEffect(() => {
         const interval = setInterval(() => {
-            if (autoDelete && toastList.length && list.length) {
-                deleteToast(toastList[0].id);
+            if (autoDelete && appState.toasts.length && appState.toasts.length) {
+                deleteToast(appState.toasts[0].id!);
             }
         }, dismissTime);
         
@@ -30,27 +22,39 @@ export const Toast = (props: IProps) => {
         }
 
         // eslint-disable-next-line
-    }, [toastList, autoDelete, dismissTime, list]);
+    }, [appState.toasts, autoDelete, dismissTime]);
 
     const deleteToast = (id:number) => {
-        const listItemIndex = list.findIndex(e => e.id === id);
-        const toastListItem = toastList.findIndex(e => e.id === id);
-        list.splice(listItemIndex, 1);
-        toastList.splice(toastListItem, 1);
-        setList([...list]);
+        appDispatch({
+            type: AppActionType.RemoveToast,
+            payload: id
+        });
+    }
+
+    const getBackground = (type:string) => {
+        switch (type) {
+            case "success":
+                return "#5cb85c";
+            case "error":
+                return "#d9534f";
+            case "info":
+                return "#5bc0de";
+            case "warning":
+                return "#ff9600";
+        }
     }
 
     return (
         <>
             <div className={`notification-container ${position}`}>
                 {
-                    list.map((toast, i) =>     
+                    appState.toasts.map((toast, i) =>     
                         <div 
                             key={i}
                             className={`notification panini ${position}`}
-                            style={{ backgroundColor: toast.backgroundColor }}
+                            style={{ backgroundColor: getBackground(toast.type) }}
                         >
-                            <button onClick={() => deleteToast(toast.id)}>
+                            <button onClick={() => deleteToast(toast.id!)}>
                                 X
                             </button>
                             <div className="notification-content">

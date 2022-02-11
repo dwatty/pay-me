@@ -72,7 +72,8 @@
 }
 
 
-.next-round-available {
+.next-round-available,
+.game-won {
     display: flex;
     position: fixed;
     top: 0;
@@ -87,12 +88,15 @@
     text-align: center;
 }
 
-.next-round-available h1 {
+.next-round-available h1,
+.game-won h1 {
     font-size: 4rem;
 }
 
-.next-round-available p {
+.next-round-available p,
+.game-won p {
     font-size: 1.3rem;
+    padding: .8rem 2rem;
 }
 
 .next-round-available button {
@@ -100,17 +104,4 @@
     border: none;
     border-radius: 1rem;
     padding: 1rem;
-}
-
-.lobby-btn {
-    display: block;
-    position: absolute;
-    top: 1.5rem;
-    left: 1.5rem;
-    color: white;
-    border-color: white;
-}
-
-.lobby-btn:hover {
-    color: #eee;
 }

@@ -32,42 +32,29 @@ export const NavMenu = () => {
         <header>
             <Navbar
                 className="navbar-expand-sm navbar-toggleable-sm ng-white"
-                light
-            >
+                light>
                 <Container className="appnav" fluid={true}>
                     <NavbarBrand tag={Link} to="/">
                         Pay Me
                     </NavbarBrand>
                     <NavbarToggler onClick={toggleNavbar} className="mr-2" />
                     <Collapse
-                        className="d-sm-inline-flex flex-sm-row-reverse"
+                        className=""
                         isOpen={!collapsed}
-                        navbar
-                    >
+                        navbar>
                         <ul className="navbar-nav flex-grow">
                             <NavItem>
-                                <NavLink
-                                    tag={Link}
-                                    to="/"
-                                >
-                                    { appState.username }
-                                </NavLink>
-                            </NavItem>
-                            
-                            <NavItem>
-                                <NavLink
-                                    tag={Link}
-                                    to="/"
-                                >
+                                <NavLink tag={Link} to="/">
                                     Lobby
                                 </NavLink>
                             </NavItem>
                             <NavItem>
-                                <button
-                                    onClick={quit}
-                                >
-                                    Quit
-                                </button>
+                                <NavLink tag={Link} to="/how-to-play">
+                                    How to Play
+                                </NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <button onClick={quit}>Quit</button>
                             </NavItem>
                         </ul>
                     </Collapse>
