@@ -1,0 +1,29 @@
+# 
+#  Type: Role
+#  What: 
+#  Why: 
+#
+---
+# For RBAC-enabled clusters, the Kubernetes service account for the pods may also need to be granted the required access:
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: pod-reader
+rules:
+- apiGroups: [ "" ]
+  resources: ["pods"]
+  verbs: ["get", "watch", "list"]
+---
+# TBD
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: pod-reader-binding
+subjects:
+- kind: ServiceAccount
+  name: default
+  apiGroup: ''
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: ''

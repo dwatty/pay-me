@@ -1,0 +1,26 @@
+# 
+#  Type: Deployment
+#  What: PayMe Frontend app
+#  Why: Deploy our front end container
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+spec:
+  selector:
+    matchLabels:
+      app: paymeapp
+      tier: frontend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: paymeapp
+        tier: frontend
+    spec:
+      containers:
+      - name: payme-client
+        image: watterson.azurecr.io/payme-client
+        imagePullPolicy: Always
+...
